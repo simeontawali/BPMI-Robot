@@ -28,8 +28,7 @@ HOST = '0.0.0.0' # all available networks
 PORT = 65432  # Port to listen on (non-privileged ports are > 1023) ensure port is the same for both PC/PI
 
 
-class main():
-
+class start():
     server_socket = ethernet_pi.init_server(HOST,PORT)
     client_socket = ethernet_pi.init_conection(server_socket)
 
@@ -37,6 +36,7 @@ class main():
     #while True:
     #control_input = controller.get_input()
 
+class exit():
     #camera_pi.close()
     #sensors.close()
-    ethernet_pi.close_connection(client_socket,server_socket)
+    ethernet_pi.close_connection(start.client_socket,start.server_socket)

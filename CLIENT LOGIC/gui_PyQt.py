@@ -24,25 +24,56 @@ Additional Notes:
 
 """
 import sys
-# 1. Import QApplication and all the required widgets
-from PyQt6.QtWidgets import (
-    QApplication,
-    QHBoxLayout,
-    QPushButton,
-    QWidget,
-)
+from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPlainTextEdit, QPushButton, QDockWidget, QTextEdit
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QTextCursor, QColor
 
-# 2. Create an instance of QApplication
-app = QApplication([])
+class operator(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("BPMI Robotics")
+        self.setGeometry(100, 100, 800, 600)  # Adjust the dimensions as needed
 
-# 3. Create your application's GUI
-window = QWidget()
-window.setWindowTitle("BPMI Robot")
-# window.setGeometry(100, 100, 280, 80)
+        self.central_widget = QMainWindow()
+
+        # Create a QTextEdit widget
+        self.error_terminal = QTextEdit()
+        self.error_terminal.setReadOnly(True)
+
+        # Create a QDockWidget and set its features
+        dock = QDockWidget("Terminal", self)
+        dock.setWidget(self.error_terminal)
+        dock.setFeatures(QDockWidget.DockWidgetFeature.DockWidgetMovable | QDockWidget.DockWidgetFeature.DockWidgetClosable)
+        self.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, dock)
+
+        self.show()
 
 
-# 4. Show your application's GUI
-window.show()
+        # Function to show error messages
+        def error_write(message):
+            cursor = self.error_terminal.textCursor()
+            cursor.movePosition(QTextCursor.MoveOperation.End)
+            cursor.insertText(message)
+            cursor.insertBlock()
+            char_format = QTextCursor().charFormat()
+            char_format.setForeground(QColor("red"))
+            cursor.mergeCharFormat(char_format)
+            # print(message, file=sys.stderr)
 
-# 5. Run your application's event loop
-sys.exit(app.exec())
+        # Test the error message function
+        error_write("Sample error message.")
+
+        # Function to write text to the terminal
+        def terminal_write(text):
+            cursor = self.error_terminal.textCursor()
+            cursor.movePosition(QTextCursor.MoveOperation.End)
+            cursor.insertText(text)
+            cursor.insertBlock()
+
+        # Example of writing text to the terminal
+        terminal_write("This text is written to the terminal.")
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    window = operator()
+    sys.exit(app.exec())
