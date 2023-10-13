@@ -7,17 +7,19 @@ Description: gui code for PyQt implementation
 Verion: 0.0.1
 Authors: Tiwari, Gomez, Bennett
 
-Build Notes: Initial structure and research
+Build Notes: 
+    Initial structure and research
 
-Dependencies: None
+Dependencies:
+    PyQt6 Installation
 
 References:
-https://wiki.python.org/moin/PyQt
-https://pypi.org/project/PyQt5/
+    https://wiki.python.org/moin/PyQt
+    https://pypi.org/project/PyQt5/
 
 Additional Notes:
 
-pip install PyQt5
+    NOTE: python -m pip install pyqt6
 
 """
 import sys
