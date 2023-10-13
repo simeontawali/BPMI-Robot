@@ -7,7 +7,7 @@ Description: main script
 Verion: 0.0.1
 Authors: Tiwari, Gomez, Bennett
 
-Build Notes: 
+Build Notes:
     Initial structure and research
 
 Dependencies: None
