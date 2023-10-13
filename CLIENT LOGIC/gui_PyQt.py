@@ -15,11 +15,12 @@ Dependencies:
 
 References:
     https://wiki.python.org/moin/PyQt
-    https://pypi.org/project/PyQt5/
+    https://pypi.org/project/PyQt6/
+    https://realpython.com/python-pyqt-gui-calculator/#getting-to-know-pyqt
+    https://www.pythonguis.com/pyqt6-tutorial/
 
 Additional Notes:
-
-    NOTE: python -m pip install pyqt6
+    python -m pip install pyqt6
 
 """
 import sys

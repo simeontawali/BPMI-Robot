@@ -7,14 +7,15 @@ Description: main script
 Verion: 0.0.1
 Authors: Tiwari, Gomez, Bennett
 
-Build Notes: Initial structure and research
+Build Notes: 
+    Initial structure and research
 
 Dependencies: None
 
 References:
 
 Additional Notes:
-Ensure ports are the same on both the pi and the pc
+    Ensure ports are the same on both the pi and the pc
 
 """
 
