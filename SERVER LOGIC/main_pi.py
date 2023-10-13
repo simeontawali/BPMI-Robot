@@ -36,6 +36,6 @@ class main():
     #while True:
     #control_input = controller.get_input()
 
-    camera_pi.close()
-    sensors.close()
+    #camera_pi.close()
+    #sensors.close()
     ethernet_pi.close_connection(client_socket,server_socket)
