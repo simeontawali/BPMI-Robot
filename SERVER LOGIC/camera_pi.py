@@ -1,5 +1,5 @@
 """
-BPMI Pipe Cleaning and Inspection Robot
+BPMI Robotic Annular Pipe Sanitization System
 File Name: camera.py
 Date Created: 10/11/2023 SAT
 Date Last Modified: 10/11/2023 SAT
