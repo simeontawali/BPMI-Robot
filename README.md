@@ -1,13 +1,11 @@
-# Overview
-
-- BPMI Robotic Annular Pipe Sanitization System
+# BPMI Robotic Annular Pipe Sanitization System
+## Overview
 - File Name: README.md
 - Date Created: 10/11/2023 SAT
 - Date Last Modified: 10/11/2023 SAT
 - Description: readme
 - Verion: 0.0.1
 - Authors: Tiwari, Gomez, Bennett
-
 ## Hardware
 - Raspberry pi zero 2
 - Arduino nano every
@@ -18,9 +16,11 @@
 - controller.py
 - motorControl.py
 - README.md
+## Installation
+
 ## Wiring the robot
 
-## Installation
+## Notes:
 
 ### Ethernet
 
