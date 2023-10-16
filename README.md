@@ -71,14 +71,14 @@ start flask
 # Credits
 
 BPMI Team:
-Ben Elverson
-Ben Genberg
-Jon Weir
-Kaitlyn Ritchey
-Katherine Bennett
-Madeline Weatherill
-Mark Armour
-Michael Gomez
-Simeon Tiwari
-Trace Peace
+Ben Elverson,
+Ben Genberg,
+Jon Weir,
+Kaitlyn Ritchey,
+Katherine Bennett,
+Madeline Weatherill,
+Mark Armour,
+Michael Gomez,
+Simeon Tiwari,
+Trace Peace, and
 Will Zeisler
