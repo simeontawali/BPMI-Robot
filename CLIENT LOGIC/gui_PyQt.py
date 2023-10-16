@@ -24,8 +24,12 @@ Additional Notes:
 
 """
 import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPlainTextEdit, QPushButton, QDockWidget, QTextEdit
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import QDateTime, Qt, QTimer
+from PyQt6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDateTimeEdit,
+        QDial, QDialog, QGridLayout, QGroupBox, QHBoxLayout, QLabel, QLineEdit,
+        QProgressBar, QPushButton, QRadioButton, QScrollBar, QSizePolicy,
+        QSlider, QSpinBox, QStyleFactory, QTableWidget, QTabWidget, QTextEdit,
+        QVBoxLayout, QWidget,QMainWindow,QDockWidget)
 from PyQt6.QtGui import QTextCursor, QColor
 
 class operator(QMainWindow):
@@ -46,9 +50,6 @@ class operator(QMainWindow):
         dock.setFeatures(QDockWidget.DockWidgetFeature.DockWidgetMovable | QDockWidget.DockWidgetFeature.DockWidgetClosable)
         self.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, dock)
 
-        self.show()
-
-
         # Function to show error messages
         def error_write(message):
             cursor = self.error_terminal.textCursor()
@@ -61,7 +62,7 @@ class operator(QMainWindow):
             # print(message, file=sys.stderr)
 
         # Test the error message function
-        error_write("Sample error message.")
+        error_write("This should be red")
 
         # Function to write text to the terminal
         def terminal_write(text):
@@ -76,4 +77,5 @@ class operator(QMainWindow):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = operator()
+    window.show()
     sys.exit(app.exec())
