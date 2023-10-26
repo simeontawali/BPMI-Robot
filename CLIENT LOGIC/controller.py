@@ -153,3 +153,11 @@ if __name__ == "__main__":
 		clear_screen()
 		print(xi.GetState(0), end="     \r")
 		sleep(0.016)
+
+		# Tests
+		#state_packet_number, gamepad = xi.GetState(0)
+		#right_trigger_state = gamepad.bRightTrigger
+		#print(f"Right Trigger State: {right_trigger_state}")
+		#sleep(0.016)
+
+
