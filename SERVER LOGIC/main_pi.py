@@ -30,7 +30,7 @@ PORT = 65432  # Port to listen on (non-privileged ports are > 1023) ensure port 
 
 # main_pi.py
 from motor_control import control_motors
-from ethernet_pi import init_server, init_conection, send_data, recieve_data, close_connection
+from ethernet_pi import init_server, init_conection, send_data, close_connection, receive_data
 import ctypes
 
 class XINPUT_GAMEPAD(ctypes.Structure):
@@ -53,7 +53,7 @@ connection = init_conection(server_socket)
 try:
     while True:
         # Receive data from the PC
-        data = recieve_data(connection)
+        data = receive_data(connection)
         packet_number, gamepad = convert_to_gamepad(data)
         # Control the motors based on the received controller input
         control_motors(packet_number, gamepad)

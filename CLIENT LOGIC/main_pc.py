@@ -20,7 +20,7 @@ Ensure Host is configured to the IP of the pi
 """
 from controller import XInput, XUSER_MAX_COUNT
 from time import sleep
-from ethernet_pc import init_client, send_data, recieve_data, close_connection
+from ethernet_pc import init_client, send_data, receive_data, close_connection
 
 HOST = '0.0.0.0' # use the same host as IP address of Pi
 # TODO: setup PI IP automatically. Read IP and establish connection
