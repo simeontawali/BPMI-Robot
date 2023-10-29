@@ -43,14 +43,14 @@ def init_conection(server_socket):
     print(f"Connection from {client_address}")
     return client_socket
 
-def send_data(client_socket, data, data_type="camera"):
-    if data_type == "camera" or data_type == "third_data":
+def send_data(client_socket, data, type="camera"):
+    if type == "camera" or type == "third_data":
         client_socket.sendall(data)
     else:
         client_socket.send(data.encode())
 
-def receive_data(client_socket, expected_data_type="controller"):
-    if expected_data_type == "controller":
+def receive_data(client_socket, type="controller"):
+    if type == "controller":
         buffer = 1024
         data = client_socket.recv(buffer)
         return data
@@ -67,7 +67,7 @@ def receive_data(client_socket, expected_data_type="controller"):
         frame_data = data[:msg_size]
         data = data[msg_size:]
         return frame_data
-
+    
 
 def send_image(client_socket):
     connection = client_socket.makefile('wb')
