@@ -4,7 +4,7 @@ File Name: main.py
 Date Created: 10/11/2023 SAT
 Date Last Modified: 10/28/2023 SAT
 Description: main script
-Verion: 0.0.1
+Verion: 0.1.1
 Authors: Tiwari, Gomez, Bennett
 
 Build Notes:
