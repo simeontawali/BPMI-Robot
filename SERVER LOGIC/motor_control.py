@@ -42,18 +42,29 @@ GPIO.setup(BIN2, GPIO.OUT)
 
 # Function to control the left motor
 def left_motor_control(speed, direction):
-    # TODO: Control the left motor based on the input speed and direction
-    pass
+    if direction == "forward":
+        GPIO.output(AIN1, GPIO.HIGH)
+        GPIO.output(AIN2, GPIO.LOW)
+    elif direction == "backward":
+        GPIO.output(AIN1, GPIO.LOW)
+        GPIO.output(AIN2, GPIO.HIGH)
 
 # Function to control the right motor
 def right_motor_control(speed, direction):
-    # TODO: Control the right motor based on the input speed and direction
-    pass
+    if direction == "forward":
+        GPIO.output(BIN1, GPIO.HIGH)
+        GPIO.output(BIN2, GPIO.LOW)
+    elif direction == "backward":
+        GPIO.output(BIN1, GPIO.LOW)
+        GPIO.output(BIN2, GPIO.HIGH)
 
 # Function to stop both motors
 def stop_motors():
-    pass
-
+    GPIO.output(AIN1, GPIO.LOW)
+    GPIO.output(AIN2, GPIO.LOW)
+    GPIO.output(BIN1, GPIO.LOW)
+    GPIO.output(BIN2, GPIO.LOW)
+    
 # Function to control the motors based on the Xbox controller input
 def control_motors(packet_number, gamepad):
     # Extract the necessary values from the gamepad input
