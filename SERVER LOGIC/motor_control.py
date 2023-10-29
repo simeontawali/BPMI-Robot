@@ -9,7 +9,10 @@ Authors: Bennett, Gomez, Tiwari
 
 Build Notes: first implementation?
 
-Dependencies: None
+Dependencies:
+    on the pi install
+    "pip install RPi.GPIO"
+    or "sudo pip install RPi.GPIO"
 
 References:
 
@@ -64,7 +67,7 @@ def stop_motors():
     GPIO.output(AIN2, GPIO.LOW)
     GPIO.output(BIN1, GPIO.LOW)
     GPIO.output(BIN2, GPIO.LOW)
-    
+
 # Function to control the motors based on the Xbox controller input
 def control_motors(packet_number, gamepad):
     # Extract the necessary values from the gamepad input
