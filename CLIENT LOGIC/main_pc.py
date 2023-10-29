@@ -4,7 +4,7 @@ File Name: main.py
 Date Created: 10/11/2023 SAT
 Date Last Modified: 10/28/2023 SAT
 Description: main script
-Verion: 0.0.1
+Verion: 0.1.0
 Authors: Tiwari, Gomez, Bennett
 
 Build Notes: Initial structure and research
@@ -28,33 +28,20 @@ PORT = 65432  # Port to listen on (non-privileged ports are > 1023) ensure port 
 xi = XInput()
 
 
-class startup():
-    client_socket = init_client(HOST,PORT)
+client_socket = init_client(HOST, PORT)
+try:
+    for x in range(XUSER_MAX_COUNT):
+        try:
+            packet_number, gamepad = xi.GetState(x)
+            # Convert the gamepad data to a string for transmission
+            data = f"{packet_number},{gamepad}".encode()
+            # Send data to the Raspberry Pi
+            send_data(client_socket, data)
+        except Exception as e:
+            print(f"Controller {x} not available: {e}")
 
-    try:
-        for x in range(XUSER_MAX_COUNT):
-            try:
-                packet_number, gamepad = xi.GetState(x)
-                # Convert the gamepad data to a string for transmission
-                data = f"{packet_number},{gamepad}".encode()
-                # Send data to the Raspberry Pi
-                send_data(client_socket, data)
-            except Exception as e:
-                print(f"Controller {x} not available: {e}")
-
-        while True:
-            # Receive data from the Raspberry Pi
-            received_data = recieve_data(client_socket)
-            # Decode and unpack the data
-            packet_number, gamepad = received_data.decode().split(',')
-            gamepad = XINPUT_GAMEPAD.from_buffer_copy(gamepad)
-            # Control the motors based on the received controller input
-            control_motors(int(packet_number), gamepad)
-
-    except KeyboardInterrupt:
-        pass
-    finally:
-        # Close the connection
-        close_connection(client_socket)    
-
-
+except KeyboardInterrupt:
+    pass
+finally:
+    # Close the connection
+    close_connection(client_socket)
