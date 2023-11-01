@@ -61,3 +61,6 @@ class Camera(object):
                 image.verify()
                 print('Image is verified')
     finally:
+        connection.close()
+        server_socket.close()
+        
