@@ -24,6 +24,15 @@ from ctypes import WinDLL, WinError, Structure, POINTER, byref, c_ubyte
 from ctypes.util import find_library
 from ctypes.wintypes import DWORD, WORD, SHORT
 
+
+import os
+import time
+
+# Function to clear the screen
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+
 # for some reason wintypes.BYTE is defined as signed c_byte and as c_ubyte
 BYTE = c_ubyte
 
@@ -141,5 +150,14 @@ if __name__ == "__main__":
 
 	print("Reading all inputs from gamepad 0")
 	while True:
+		clear_screen()
 		print(xi.GetState(0), end="     \r")
 		sleep(0.016)
+
+		# Tests
+		#state_packet_number, gamepad = xi.GetState(0)
+		#right_trigger_state = gamepad.bRightTrigger
+		#print(f"Right Trigger State: {right_trigger_state}")
+		#sleep(0.016)
+
+

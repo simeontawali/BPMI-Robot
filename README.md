@@ -67,6 +67,7 @@ start flask
 - https://www.raspberrypi-spy.co.uk/2020/05/adding-ethernet-to-a-pi-zero/
 - https://www.oreilly.com/content/how-to-build-a-robot-that-sees-with-100-and-tensorflow/
 - https://learn.microsoft.com/en-us/windows/win32/api/_xinput/
+- https://pinout.xyz/pinout/spi
 
 # Credits
 
