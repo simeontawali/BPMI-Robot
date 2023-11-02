@@ -24,7 +24,9 @@ Additional Notes:
 
 """
 import sys
-from PyQt6.QtCore import QDateTime, Qt, QTimer
+import cv2
+import numpy as np
+from PyQt6.QtCore import QDateTime, Qt, QTimer, QThread, pyqtSignal
 from PyQt6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDateTimeEdit,
         QDial, QDialog, QGridLayout, QGroupBox, QHBoxLayout, QLabel, QLineEdit,
         QProgressBar, QPushButton, QRadioButton, QScrollBar, QSizePolicy,
@@ -79,3 +81,17 @@ if __name__ == '__main__':
     window = operator()
     window.show()
     sys.exit(app.exec())
+
+
+def update_image(self, frame):
+   frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+   image = QImage(frame, frame.shape[1], frame.shape[0], QImage.Format_RGB888)
+   self.label.setPixmap(QPixmap.fromImage(image))
+
+   def capture_photo(self):
+      frame = self.camera.frame
+      frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+      image = QImage(frame, frame.shape[1], frame.shape[0], QImage.Format_RGB888)
+      filename, _ = QFileDialog.getSaveFileName(self, "Save Photo", "", "JPEG Image (*.jpg)")
+      if filename:
+         image.save(filename, "jpg")
