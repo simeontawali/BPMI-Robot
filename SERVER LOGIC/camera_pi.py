@@ -21,6 +21,7 @@ import socket
 import struct
 from PIL import Image
 import matplotlib.pyplot as pl
+import time
 
 
 
@@ -31,7 +32,7 @@ class Camera(object):
         pass
 
     server_socket = socket.socket()
-    server_socket.bind(('192.168.1.159',8000))
+    server_socket.bind(('169.254.238.232',8000))
     server_socket.listen(0)
 
     connection = server_socket.accept()[0].makefile('rb')
@@ -60,6 +61,8 @@ class Camera(object):
                 print('Image is %dx%d' % image.size)
                 image.verify()
                 print('Image is verified')
+                time.sleep(1)
+
     finally:
         connection.close()
         server_socket.close()
