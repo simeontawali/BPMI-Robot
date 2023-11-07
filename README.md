@@ -32,6 +32,12 @@ SSH Host: "raspberrypi.local"
 create a file named ssh (no type)
 see the following tutorial for additional help: https://www.youtube.com/watch?v=XaTmG708Mss&ab_channel=CineSpirit
 
+Establish connection in putty
+yourhostname.host
+open
+Install the following in the terminal:
+- sudo apt-get update && sudo apt-get upgrade -y
+- sudo apt-get install python-pip
 ## Wiring the robot
 
 ## Notes:
