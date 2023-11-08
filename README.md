@@ -38,6 +38,10 @@ open
 Install the following in the terminal:
 - sudo apt-get update && sudo apt-get upgrade -y
 - sudo apt-get install python-pip
+- sudo apt-get install python3-pip
+
+Install a text editor like VIM:
+- sudo apt install vim
 ## Wiring the robot
 
 ## Notes:
