@@ -52,6 +52,7 @@ class Camera(object):
 
                 if img is None:
                       img = pl.imshow(image)
+                      print('This part worked')
                 else:
                     img.set_data
 
