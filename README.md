@@ -45,14 +45,20 @@ Install a text editor like VIM:
 
 ## Camera setup
 Enable legacy camera support
-- sudo raspi-config
+'''
+sudo raspi-config
+'''
 - Interface options
 - Legacy camera
 
 Test camera is enabled and connected to the pi:
-- vcgencmd get_camera
+'''
+vcgencmd get_camera
+'''
 Test picture:
-- raspistill -o Desktop/image.jpg
+'''
+raspistill -o Desktop/image.jpg
+'''
 
 
 ## Wiring the robot
