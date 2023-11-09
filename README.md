@@ -22,8 +22,11 @@
 Install the following:
 - RaspberryPi Imager Software: https://www.raspberrypi.org/software/
 - Bonjour Drivers: https://support.apple.com/kb/dl999?locale=en_GB
+- Bonjour Print Services by Apple lets us refer to our Raspberry Pi (and other devices) by name so we don't have to figure out what its IP Address is in order to connect to it.
 - Putty: https://www.putty.org/
 - USB Ethernet Drivers: https://www.catalog.update.microsoft.com/Search.aspx?q=USB+RNDIS+Gadget
+- https://etcher.balena.io/
+- https://sourceforge.net/projects/win32diskimager/ 
 Setup the raspberry pi lite software
 Make the following edits in boot:
 Config.txt: "dtoverlay=dwc2" 
@@ -31,6 +34,7 @@ Cmdline.txt:  "modules-load=dwc2,g_ether" (add a space and insert after "rootwai
 SSH Host: "raspberrypi.local"
 create a file named ssh (no type)
 see the following tutorial for additional help: https://www.youtube.com/watch?v=XaTmG708Mss&ab_channel=CineSpirit
+https://www.instructables.com/The-Ultimate-Headless-RPi-Zero-Setup-for-Beginners/
 
 Establish connection in putty
 yourhostname.host
