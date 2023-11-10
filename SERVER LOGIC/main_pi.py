@@ -18,48 +18,28 @@ Additional Notes:
     Ensure ports are the same on both the pi and the pc
 
 """
- 
-import camera_pi
-import sensors
-import ethernet_pi
 
-HOST = '0.0.0.0' # all available networks
-# TODO: setup PI IP automatically. Read IP and establish connection
-PORT = 65432  # Port to listen on (non-privileged ports are > 1023) ensure port is the same for both PC/PI
+import subprocess
+import time
 
+# Define the command to run the streaming server script
+server_command = ["python", "server.py"]
 
-# main_pi.py
-from motor_control import control_motors
-from ethernet_pi import init_server, init_conection, send_data, close_connection, receive_data
-import ctypes
-
-class XINPUT_GAMEPAD(ctypes.Structure):
-    # Define the structure of XINPUT_GAMEPAD here based on the definition in controller.py
-    _fields_ = [
-        # Define the fields of XINPUT_GAMEPAD here
-    ]
-
-# Function to convert the received string back to XINPUT_GAMEPAD
-def convert_to_gamepad(data):
-    packet_number, gamepad_data = data.split(b',', 1)
-    gamepad = XINPUT_GAMEPAD.from_buffer_copy(gamepad_data)
-    return int(packet_number), gamepad
-
-
-# Initialize the server on the Raspberry Pi
-server_socket = init_server(HOST, PORT)
-connection = init_conection(server_socket)
+# Define the command to run the other Python script
+ethernet_command = ["python", "ethernet_controller_pi.py"]
 
 try:
-    while True:
-        # Receive data from the PC
-        data = receive_data(connection)
-        packet_number, gamepad = convert_to_gamepad(data)
-        # Control the motors based on the received controller input
-        control_motors(packet_number, gamepad)
-
+    # Start the streaming server script in a separate process
+    server_process = subprocess.Popen(server_command)
+    # Add a short delay to ensure that the streaming server has started
+    time.sleep(2)
+    # Start the other Python script in a separate process
+    ethernet_process = subprocess.Popen(ethernet_command)
+    # Wait for both processes to complete
+    server_process.wait()
+    ethernet_process.wait()
 except KeyboardInterrupt:
-    pass
-finally:
-    # Close the connection
-    close_connection(connection, server_socket)
+    # Handle keyboard interrupt (Ctrl+C) to gracefully terminate both processes
+    server_process.terminate()
+    ethernet_process.terminate()
+
