@@ -138,5 +138,26 @@ class XInput:
 		return state.dwPacketNumber, state.Gamepad
 
 
+if __name__ == "__main__":
+	xi = XInput()
+	from time import sleep
+	for x in range(XUSER_MAX_COUNT):
+		try:
+			print(f"Reading input from controller {x}")
+			print(xi.GetState(x))
+		except Exception as e:
+			print(f"Controller {x} not available: {e}")
+
+	print("Reading all inputs from gamepad 0")
+	while True:
+		clear_screen()
+		print(xi.GetState(0), end="     \r")
+		sleep(0.016)
+
+		# Tests
+		#state_packet_number, gamepad = xi.GetState(0)
+		#right_trigger_state = gamepad.bRightTrigger
+		#print(f"Right Trigger State: {right_trigger_state}")
+		#sleep(0.016)
 
 
