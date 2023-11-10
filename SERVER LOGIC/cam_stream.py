@@ -8,7 +8,7 @@ from http import server
 PAGE="""\
 <html>
 <head>
-<title>picamera MJPEG streaming demo</title>
+<title>BPMI MJPEG Server</title>
 </head>
 <body>
 <h1>BPMI CAM</h1>
