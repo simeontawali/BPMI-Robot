@@ -11,8 +11,8 @@ PAGE="""\
 <title>picamera MJPEG streaming demo</title>
 </head>
 <body>
-<h1>PiCamera MJPEG Streaming Demo</h1>
-<img src="stream.mjpg" width="640" height="480" />
+<h1>BPMI CAM</h1>
+<img src="stream.mjpg" width="1280" height="720" />
 </body>
 </html>
 """
@@ -77,7 +77,7 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     allow_reuse_address = True
     daemon_threads = True
 
-with picamera.PiCamera(resolution='640x480', framerate=24) as camera:
+with picamera.PiCamera(resolution='1280x720', framerate=60) as camera:
     output = StreamingOutput()
     camera.start_recording(output, format='mjpeg')
     try:
