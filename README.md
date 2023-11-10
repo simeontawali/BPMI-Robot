@@ -120,6 +120,7 @@ start flask
 - https://roboticsbackend.com/raspberry-pi-create-a-flask-server/#Install_%E2%80%93_Setup_Raspberry_Pi_OS_and_Flask
 - https://gist.github.com/artizirk/b407ba86feb7f0227654f8f5f1541413
 - https://www.youtube.com/watch?v=XaTmG708Mss&ab_channel=CineSpirit
+- https://github.com/Zuzu-Typ/XInput-Python/tree/master
 
 # Credits
 

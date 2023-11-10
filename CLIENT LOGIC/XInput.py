@@ -1,3 +1,22 @@
+"""
+BPMI Robotic Annular Pipe Sanitization System
+File Name: XInput.py
+Date Created: 10/11/2023 SAT
+Date Last Modified: 11/09/2023 SAT
+Description: Controller logic
+Verion: 1.0.1
+Authors: Gomez, Tiwari, Bennett
+
+Build Notes: First Finished Implementation
+
+Dependencies: XInput
+
+References: https://github.com/Zuzu-Typ/XInput-Python/tree/master
+
+Additional Notes:
+
+"""
+
 import ctypes, ctypes.util
 from ctypes import Structure, POINTER
 from math import sqrt
