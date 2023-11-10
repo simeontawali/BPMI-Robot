@@ -12,7 +12,7 @@ PAGE="""\
 </head>
 <body>
 <h1>BPMI CAM</h1>
-<img src="stream.mjpg" width="1280" height="720" />
+<img src="stream.mjpg" width="1280" height="1024" />
 </body>
 </html>
 """
@@ -77,7 +77,7 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     allow_reuse_address = True
     daemon_threads = True
 
-with picamera.PiCamera(resolution='1280x720', framerate=60) as camera:
+with picamera.PiCamera(resolution='1280x1024', framerate=30) as camera:
     output = StreamingOutput()
     camera.start_recording(output, format='mjpeg')
     try:
