@@ -1,5 +1,10 @@
 #!/usr/bin/env python
 """
+Streams on:   http://pi-address:8082/
+
+Code is based on Pi streaming git
+Modified by Simeon Tiwari to work with pi zero and resolve dir errors
+
 https://github.com/waveform80/pistreaming/tree/master
 Dependencies:
 sudo apt-get install ffmpeg git python3-picamera python3-ws4py
@@ -31,6 +36,7 @@ from ws4py.server.wsgiutils import WebSocketWSGIApplication
 
 ###########################################
 # CONFIGURATION
+# 1280x720 or 800x600 or 640x480
 WIDTH = 640
 HEIGHT = 480
 FRAMERATE = 24
@@ -82,10 +88,18 @@ class StreamingHttpServer(HTTPServer):
     def __init__(self):
         super(StreamingHttpServer, self).__init__(
                 ('', HTTP_PORT), StreamingHttpHandler)
-        with io.open('index.html', 'r') as f:
+        # MODIFIED FROM ORIGINAL
+        script_dir = os.path.dirname(os.path.realpath(__file__))
+        index_path = os.path.join(script_dir, 'index.html')
+        jsmpg_path = os.path.join(script_dir, 'jsmpg.js')
+        with io.open(index_path, 'r') as f:
             self.index_template = f.read()
-        with io.open('jsmpg.js', 'r') as f:
+        with io.open(jsmpg_path, 'r') as f:
             self.jsmpg_content = f.read()
+        # with io.open('index.html', 'r') as f:
+        #     self.index_template = f.read()
+        # with io.open('jsmpg.js', 'r') as f:
+        #     self.jsmpg_content = f.read()
 
 
 class StreamingWebSocket(WebSocket):

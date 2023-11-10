@@ -106,7 +106,7 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     daemon_threads = True
 
 # Set up the camera with resolution and framerate
-with picamera.PiCamera(resolution='1280x1024', framerate=30) as camera:
+with picamera.PiCamera(resolution='1280x1024', framerate=24) as camera:
     # Create a StreamingOutput instance to handle the camera output
     output = StreamingOutput()
     # Start recording with MJPEG format
