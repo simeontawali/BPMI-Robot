@@ -31,17 +31,13 @@ conn, addr = s.accept()
 
 # logic for controlling the game or robot
 def control(controller_values):
-    # Example logic
     left_thumb_x, left_thumb_y = controller_values['left_thumb']
     right_thumb_x, right_thumb_y = controller_values['right_thumb']
     left_trigger, right_trigger = controller_values['triggers']
     buttons_pressed = controller_values['buttons']
 
-    # Insert your control logic here
-    # Example: Moving a character based on the left thumbstick
     #print(f"Left Thumb: ({left_thumb_x}, {left_thumb_y})")
 
-    # Example: Shooting based on the right trigger
     if right_trigger > 0:
         p.start(50)
         print("right trigger")
@@ -54,14 +50,18 @@ def control(controller_values):
     else:
         p2.stop()
 
-    # Example: Performing an action based on button press
+    # Performing an action based on button press
     if 'A' in buttons_pressed:
-        print("LED ON")
-        GPIO.output(led, GPIO.HIGH) # Toggle the LED
+        if GPIO.input(led) == GPIO.LOW:
+            print("LED ON")
+            GPIO.output(led, GPIO.HIGH)  # Turn the LED ON
+        else:
+            print("LED OFF")
+            GPIO.output(led, GPIO.LOW)   # Turn the LED OFF
 
-    if 'B' in buttons_pressed:
-        print("LED OFF")
-        GPIO.output(led, GPIO.LOW)
+        if 'B' in buttons_pressed:
+            print("LED OFF")
+            GPIO.output(led, GPIO.LOW)
 
 
 while True:
