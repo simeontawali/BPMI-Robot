@@ -121,6 +121,7 @@ start flask
 - https://gist.github.com/artizirk/b407ba86feb7f0227654f8f5f1541413
 - https://www.youtube.com/watch?v=XaTmG708Mss&ab_channel=CineSpirit
 - https://github.com/Zuzu-Typ/XInput-Python/tree/master
+- https://blog.thea.codes/talking-to-gamepads-without-pygame/
 
 # Credits
 
