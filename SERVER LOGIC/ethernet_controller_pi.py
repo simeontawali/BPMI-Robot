@@ -11,14 +11,17 @@ PORT = 12345
 led = 18
 servo1 = 16
 servo2 = 22
+freq = 50 # 100
+dc_forward = 5
+dc_backward = 10
 GPIO.setmode(GPIO.BOARD) # for GPIO Numberng choose BCM, for pin numbering choose BOARD
 GPIO.setup(led, GPIO.OUT)
 
 GPIO.setup(servo1, GPIO.OUT)
-p = GPIO.PWM(servo1, 100)
+p = GPIO.PWM(servo1, freq)
 
 GPIO.setup(servo2, GPIO.OUT)
-p2 = GPIO.PWM(servo2, 100)
+p2 = GPIO.PWM(servo2, freq)
 
 # Create a socket object
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -36,19 +39,23 @@ def control(controller_values):
     left_trigger, right_trigger = controller_values['triggers']
     buttons_pressed = controller_values['buttons']
 
-    #print(f"Left Thumb: ({left_thumb_x}, {left_thumb_y})")
+    # print(f"Left Thumb: ({left_thumb_x}, {left_thumb_y})")
 
     if right_trigger > 0:
-        p.start(50)
+        p.start(dc_forward)
+        p2.start(dc_backward)
         print("right trigger")
     else:
         p.stop()
+        p2.stop()
     
     if left_trigger > 0:
-        p2.start(50)
+        p2.start(dc_forward)
+        p.start(dc_backward)
         print("left trigger")
     else:
         p2.stop()
+        p.stop()
 
     # Performing an action based on button press
     if 'A' in buttons_pressed:
