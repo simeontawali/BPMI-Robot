@@ -103,7 +103,7 @@ start flask
 
 #### Camera
 
-# References
+# References and Research
 
 - https://github.com/lukas/robot/tree/master
 - https://www.raspberrypi-spy.co.uk/2020/05/adding-ethernet-to-a-pi-zero/
