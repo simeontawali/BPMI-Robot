@@ -95,7 +95,13 @@ def map(v, in_min, in_max, out_min, out_max):
 	return (v - in_min) * (out_max - out_min) // (in_max - in_min) + out_min
 
 # logic for controlling the game or robot
+prev_buttons_state = set()
+prev_right_trigger_state = 0
+prev_left_trigger_state = 0
+prev_left_thumb_state = (0, 0)
+prev_right_thumb_state = (0, 0)
 def control(controller_values):
+    global prev_buttons_state, prev_right_trigger_state, prev_left_trigger_state, prev_left_thumb_state, prev_right_thumb_state
     left_thumb_x, left_thumb_y = controller_values['left_thumb']
     right_thumb_x, right_thumb_y = controller_values['right_thumb']
     left_trigger, right_trigger = controller_values['triggers']
@@ -107,54 +113,69 @@ def control(controller_values):
     (L,R) = joystickToDiff(left_thumb_x,left_thumb_y,-1,1,-100,100)
     L = L + 100
     R = R + 100
-
     # print(f"Left Thumb: ({left_thumb_x}, {left_thumb_y})")
-
     duty_cycle_l = 5 + float(200-R)/200*5
     duty_cycle_r = 5 + float(L)/200*5
 
-    # deadzone on/off
-    if (dead):
-        if (L >= 95 and L <= 105):
-            duty_cycle_l = 0
-        if (R >= 95 and R <= 105):
-            duty_cycle_r = 0
+    #print('L: ' + str(duty_cycle_l) + ' ' + str(L))
+    #print('R: ' + str(duty_cycle_r) + ' ' + str(R))
 
-    p_l.ChangeDutyCycle(duty_cycle_l)
-    p_r.ChangeDutyCycle(duty_cycle_r)
-    print('L: ' + str(duty_cycle_l) + ' ' + str(L))
-    print('R: ' + str(duty_cycle_r) + ' ' + str(R))
-
-    """
-    if right_trigger > 0:
-        p_l.start(dc_forward)
-        p_r.start(dc_backward)
+    # triggers
+    if right_trigger > 0 and prev_right_trigger_state == 0:
+        #p_l.start(dc_forward)
+        #p_r.start(dc_backward)
         print("right trigger")
     else:
-        p_r.ChangeDutyCycle(0)
-        p_l.ChangeDutyCycle(0)
+        #p_r.ChangeDutyCycle(0)
+        #p_l.ChangeDutyCycle(0)
+        pass
     
-    if left_trigger > 0:
-        p_r.start(dc_forward)
-        p_r.start(dc_backward)
+    if left_trigger > 0 and prev_left_trigger_state == 0:
+        #p_r.start(dc_forward)
+        #p_r.start(dc_backward)
         print("left trigger")
     else:
-        p_l.ChangeDutyCycle(0)
-        p_r.ChangeDutyCycle(0)
-"""
-    
-    # Performing an action based on button press
-    if 'A' in buttons_pressed:
-        if GPIO.input(led) == GPIO.LOW:
-            print("LED ON")
-            GPIO.output(led, GPIO.HIGH)  # Turn the LED ON
-        else:
-            print("LED OFF")
-            GPIO.output(led, GPIO.LOW)   # Turn the LED OFF
+        #p_l.ChangeDutyCycle(0)
+        #p_r.ChangeDutyCycle(0)
+        pass
 
-    if 'B' in buttons_pressed:
-        dead = not dead
-        print("Deadzone mode: ", dead)
+    # Handling buttons
+    for button in buttons_pressed:
+        if button not in prev_buttons_state:
+            if 'A' in buttons_pressed:
+                if GPIO.input(led) == GPIO.LOW:
+                    print("LED ON")
+                    GPIO.output(led, GPIO.HIGH)  # Turn the LED ON
+                else:
+                    print("LED OFF")
+                    GPIO.output(led, GPIO.LOW)  # Turn the LED OFF
+            if 'B' in buttons_pressed:
+                dead = not dead
+                print("Deadzone mode: ", dead)
+
+    # Handling thumbs
+    if (left_thumb_x, left_thumb_y) != prev_left_thumb_state:
+        # Handle left thumbstick movement
+        # deadzone on/off
+        if (dead):
+            if (L >= 95 and L <= 105):
+                duty_cycle_l = 0
+            if (R >= 95 and R <= 105):
+                duty_cycle_r = 0
+        p_l.ChangeDutyCycle(duty_cycle_l)
+        p_r.ChangeDutyCycle(duty_cycle_r)
+        print(f"Left thumbstick moved to ({left_thumb_x}, {left_thumb_y})")
+
+    if (right_thumb_x, right_thumb_y) != prev_right_thumb_state:
+        # Handle right thumbstick movement
+        print(f"Right thumbstick moved to ({right_thumb_x}, {right_thumb_y})")
+
+    # Update the prev state
+    prev_buttons_state = set(buttons_pressed)
+    prev_right_trigger_state = right_trigger
+    prev_left_trigger_state = left_trigger
+    prev_left_thumb_state = (left_thumb_x, left_thumb_y)
+    prev_right_thumb_state = (right_thumb_x, right_thumb_y)
 
 
 while True:
