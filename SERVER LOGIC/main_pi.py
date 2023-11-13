@@ -21,18 +21,29 @@ Additional Notes:
 
 import subprocess
 import time
+import os, io
+import sys
+
+"""
+script_dir = os.path.dirname(os.path.realpath(__file__))
+server_path = os.path.join(script_dir, 'cam_stream.py')
+ethernet_path = os.path.join(script_dir, 'ethernet_controller_pi.py')
+with io.open(server_path, 'r') as f:
+    server_command = ['python',f]
+with io.open(ethernet_path, 'r') as f:
+    ethernet_command = ['python',f]
+    """
 
 # Define the command to run the streaming server script
-server_command = ["python", "cam_stream.py"]
-
+server_command = ['python','/mnt/usb_share/cam_stream.py']
 # Define the command to run the other Python script
-ethernet_command = ["python", "ethernet_controller_pi.py"]
+ethernet_command = ['python','/mnt/usb_share/ethernet_controller_pi.py']
 
 try:
     # Start the streaming server script in a separate process
     server_process = subprocess.Popen(server_command)
     # Add a short delay to ensure that the streaming server has started
-    time.sleep(2)
+    time.sleep(0.1)
     # Start the other Python script in a separate process
     ethernet_process = subprocess.Popen(ethernet_command)
     # Wait for both processes to complete

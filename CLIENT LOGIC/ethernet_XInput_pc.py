@@ -1,3 +1,21 @@
+"""
+BPMI Robotic Annular Pipe Sanitization System
+File Name: ethernet_XInput_pc.py
+Date Created: 10/11/2023 SAT
+Date Last Modified: 11/09/2023 SAT
+Description: Controller to ethernet logic
+Verion: 1.0.1
+Authors: Gomez, Tiwari, Bennett
+
+Build Notes: First Finished Implementation
+
+Dependencies: XInput
+
+References:
+
+Additional Notes:
+
+"""
 import socket
 import pickle
 from XInput import *
@@ -12,7 +30,7 @@ def control(controller_values):
     buttons_pressed = controller_values['buttons']
 
 # IP and port of the Raspberry Pi Zero
-HOST = '192.168.137.57'  # Change this to the IP of your Pi Zero
+HOST = '192.168.137.215'  # Change this to the IP of your Pi Zero
 PORT = 12345
 
 
