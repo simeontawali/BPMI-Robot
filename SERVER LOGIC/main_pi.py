@@ -23,7 +23,7 @@ import subprocess
 import time
 
 # Define the command to run the streaming server script
-server_command = ["python", "server.py"]
+server_command = ["python", "cam_stream.py"]
 
 # Define the command to run the other Python script
 ethernet_command = ["python", "ethernet_controller_pi.py"]
