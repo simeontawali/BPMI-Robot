@@ -122,6 +122,13 @@ start flask
 - https://www.youtube.com/watch?v=XaTmG708Mss&ab_channel=CineSpirit
 - https://github.com/Zuzu-Typ/XInput-Python/tree/master
 - https://blog.thea.codes/talking-to-gamepads-without-pygame/
+- https://pinout.xyz/
+- https://www.instructables.com/The-Ultimate-Headless-RPi-Zero-Setup-for-Beginners/
+- https://raspi.tv/2013/rpi-gpio-basics-4-setting-up-rpi-gpio-numbering-systems-and-inputs
+- https://github.com/waveform80/pistreaming/tree/master
+- https://github.com/waveform80/pistreaming/
+- https://picamera.readthedocs.io/en/release-1.13/recipes2.html#web-streaming
+- https://dantheiotman.com/2017/08/28/realtime-video-using-a-raspberry-pi-zero-w-and-python-picamera/
 
 # Credits
 
