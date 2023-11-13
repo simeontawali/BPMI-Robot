@@ -107,10 +107,12 @@ def control(controller_values):
     left_trigger, right_trigger = controller_values['triggers']
     buttons_pressed = controller_values['buttons']
     global dead
-
+    threshold = 0.1 # deadzone threshold
     if (dead):
-         left_thumb_x = deadzone(left_thumb_x,0.1)
-         left_thumb_y = deadzone(left_thumb_y,0.1)
+         left_thumb_x = deadzone(left_thumb_x,threshold)
+         left_thumb_y = deadzone(left_thumb_y,threshold)
+         right_thumb_x = deadzone(left_thumb_x,threshold)
+         right_thumb_y = deadzone(left_thumb_y,threshold)
 
     # convert to differential drive
     #print('x,y is ' + str(left_thumb_x) + ' ' + str(left_thumb_y)) 
@@ -125,32 +127,28 @@ def control(controller_values):
             duty_cycle_r = 0
 
     # print(f"Left Thumb: ({left_thumb_x}, {left_thumb_y})")
-    duty_cycle_l = 5 + float(200-R)/200*5
-    duty_cycle_r = 5 + float(L)/200*5
-    TL = 5 + float(200-R)/200*5
-    TR = 5 + float(L)/200*5
+    duty_cycle_l = 5 + float(L)/200*5
+    duty_cycle_r = 5 + float(200-R)/200*5
 
     #print('L: ' + str(duty_cycle_l) + ' ' + str(L))
     #print('R: ' + str(duty_cycle_r) + ' ' + str(R))
 
     # triggers
     if right_trigger > 0 and prev_right_trigger_state == 0:
-        p_l.ChangeDutyCycle(5)
+        p_l.ChangeDutyCycle(10)
         p_r.ChangeDutyCycle(5)
         #print("right trigger")
-    else:
-        #p_r.ChangeDutyCycle(0)
-        #p_l.ChangeDutyCycle(0)
-        pass
+    elif right_trigger == 0 and prev_right_trigger_state > 0:
+        p_r.ChangeDutyCycle(0)
+        p_l.ChangeDutyCycle(0)
     
     if left_trigger > 0 and prev_left_trigger_state == 0:
         p_l.ChangeDutyCycle(5)
-        p_r.ChangeDutyCycle(5)
+        p_r.ChangeDutyCycle(10)
         #print("left trigger")
-    else:
-        #p_l.ChangeDutyCycle(0)
-        #p_r.ChangeDutyCycle(0)
-        pass
+    elif left_trigger == 0 and prev_right_trigger_state > 0:
+        p_l.ChangeDutyCycle(0)
+        p_r.ChangeDutyCycle(0)
 
     # Handling buttons
     for button in buttons_pressed:
@@ -171,11 +169,11 @@ def control(controller_values):
         # Handle left thumbstick movement
         p_l.ChangeDutyCycle(duty_cycle_l)
         p_r.ChangeDutyCycle(duty_cycle_r)
-        #print(f"Left thumbstick moved to ({left_thumb_x}, {left_thumb_y})")
+        #print(f"Left thumbstick: ({left_thumb_x}, {left_thumb_y})")
 
     if (right_thumb_x, right_thumb_y) != prev_right_thumb_state:
         # Handle right thumbstick movement
-        #print(f"Right thumbstick moved to ({right_thumb_x}, {right_thumb_y})")
+        #print(f"Right thumbstick: ({right_thumb_x}, {right_thumb_y})")
         pass
 
     # Update the prev state
