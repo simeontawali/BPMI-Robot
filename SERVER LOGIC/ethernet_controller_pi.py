@@ -115,23 +115,24 @@ def control(controller_values):
          right_thumb_y = deadzone(left_thumb_y,threshold)
 
     # convert to differential drive
-    #print('x,y is ' + str(left_thumb_x) + ' ' + str(left_thumb_y)) 
+    print('x,y is ' + str(left_thumb_x) + ' ' + str(left_thumb_y)) 
     (L,R) = joystickToDiff(left_thumb_x,left_thumb_y,-1,1,-100,100)
     L = L + 100
     R = R + 100
     # deadzone on/off
-    if (dead):
-        if (L >= 95 and L <= 105):
-            duty_cycle_l = 0
-        if (R >= 95 and R <= 105):
-            duty_cycle_r = 0
-
+    
     # print(f"Left Thumb: ({left_thumb_x}, {left_thumb_y})")
     duty_cycle_l = 5 + float(L)/200*5
     duty_cycle_r = 5 + float(200-R)/200*5
 
-    #print('L: ' + str(duty_cycle_l) + ' ' + str(L))
-    #print('R: ' + str(duty_cycle_r) + ' ' + str(R))
+    if (dead):
+        if (duty_cycle_l >= 7.4 and duty_cycle_l <= 7.6):
+            duty_cycle_l = 0
+        if (duty_cycle_r >= 7.4 and duty_cycle_r <= 7.6):
+            duty_cycle_r = 0
+
+    print('L: ' + str(duty_cycle_l) + ' ' + str(L))
+    print('R: ' + str(duty_cycle_r) + ' ' + str(R))
 
     # triggers
     if right_trigger > 0 and prev_right_trigger_state == 0:
