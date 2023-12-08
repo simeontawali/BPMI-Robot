@@ -47,6 +47,19 @@ Install the following in the terminal:
 Install a text editor like VIM:
 - sudo apt install vim
 
+On the PI
+- sudo apt-get update && sudo apt-get upgrade -y
+- sudo apt-get install python3
+- sudo apt-get install python3-pip
+- pip install opencv-contrib-python
+- sudo apt-get install python3-picamera2
+
+
+- wget https://www.python.org/ftp/python/3.12.0/Python-3.12.0.tgz
+- sudo apt update
+- sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev
+- sudo apt install git
+
 ## Camera setup
 Enable legacy camera support
 - sudo raspi-config
