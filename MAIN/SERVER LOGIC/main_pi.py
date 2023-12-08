@@ -61,7 +61,7 @@ except KeyboardInterrupt:
     ethernet_thread.join()  # Wait for the Ethernet thread to finish
 
 
-"""
+
 try:
     # Start the streaming server script in a separate process
     server_process = subprocess.Popen(server_command)
@@ -76,5 +76,4 @@ except KeyboardInterrupt:
     # Handle keyboard interrupt (Ctrl+C) to gracefully terminate both processes
     server_process.terminate()
     ethernet_process.terminate()
-    """
 

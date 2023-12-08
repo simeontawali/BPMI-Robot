@@ -16,7 +16,7 @@ freq = 50 # 100
 dc_forward = 5
 dc_backward = 10
 dead: bool = True
-GPIO.setmode(GPIO.BCM) # for GPIO Numberng choose BCM, for pin numbering choose BOARD
+GPIO.setmode(GPIO.BCM) # for GPIO Numbering choose BCM, for pin numbering choose BOARD
 GPIO.setup(led, GPIO.OUT)
 
 GPIO.setup(pwm_left, GPIO.OUT)
