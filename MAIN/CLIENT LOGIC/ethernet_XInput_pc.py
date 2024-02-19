@@ -30,7 +30,7 @@ def control(controller_values):
     buttons_pressed = controller_values['buttons']
 
 # IP and port of the Raspberry Pi Zero
-HOST = '192.168.137.215'  # Change this to the IP of your Pi Zero
+HOST = '169.254.80.45'  # Change this to the IP of your Pi Zero
 PORT = 12345
 
 
