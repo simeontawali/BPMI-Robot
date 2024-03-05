@@ -28,9 +28,9 @@ import threading
 # command to run the camera streaming server script
 # server_command = ['python','/mnt/usb_share/cam_stream.py']
 # server_command = ['python','/mnt/usb_share/32-bit_cam_stream.py']
-server_command = ['python','/mnt/usb_share/64-bit_cam_stream.py']
+server_command = ['python','/mnt/usb_share/cam.py']
 # command to run the ethernet controller script
-ethernet_command = ['python','/mnt/usb_share/ethernet_controller_pi.py']
+ethernet_command = ['python','/mnt/usb_share/controller_test.py']
 
 def run_ethernet_script():
     while True:
