@@ -17,6 +17,7 @@ Additional Notes:
 
 """
 import RPi.GPIO as GPIO
+import controller
 
 class RobotControl:
     def __init__(self, led_pin, pwm_left_pin, pwm_right_pin, freq):
@@ -38,6 +39,26 @@ class RobotControl:
 
     def update_motors(self, duty_cycle_l, duty_cycle_r):
         # Adjust PWM based on duty cycle
+        self.p_l.ChangeDutyCycle(duty_cycle_l)
+        self.p_r.ChangeDutyCycle(duty_cycle_r)
+
+    def start(self):
+        self.p_l.start(0)
+        self.p_l.start(0)
+        
+    def stop(self):
+        self.p_l.stop()
+        self.p_r.stop()
+
+    def forward(self, distance):
+        pass
+    def backward(self, distance):
+        pass
+    def turn_left(self):
+        pass
+    def turn_right(self):
+        pass
+    def turn_around(self):
         pass
 
     def cleanup(self):
