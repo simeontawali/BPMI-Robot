@@ -1,11 +1,11 @@
 """
 BPMI Robotic Annular Pipe Sanitization System
 File Name: Network.py
-Date Created: 3/5/2024 SAT
-Date Last Modified: 3/5/2024 SAT
+Date Created: 3/5/2024 TSA
+Date Last Modified: 3/5/2024 TSA
 Description: Network class
 Verion: 1.0.1
-Authors: Tiwari
+Authors: TSA
 
 Build Notes: First Finished Implementation
 

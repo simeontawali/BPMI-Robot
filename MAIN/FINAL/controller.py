@@ -1,11 +1,11 @@
 """
 BPMI Robotic Annular Pipe Sanitization System
 File Name: controller.py
-Date Created: 3/5/2024 SAT
-Date Last Modified: 3/5/2024 SAT
+Date Created: 3/5/2024 TSA
+Date Last Modified: 3/5/2024 TSA
 Description: Controller class
 Verion: 1.0.1
-Authors: Tiwari
+Authors: TSA
 
 Build Notes: First Finished Implementation
 
@@ -104,37 +104,47 @@ class Controller:
     def update_prev_state(self,prev_controller_values):
         self.update(self.prev_state,prev_controller_values)
 
-    def get_input_value(self, input_name):
+    def state_change(self, input_name):
+        """Returns true if current state has changed from prev state, else returns false"""
+        return self.get_input_value(self.state,input_name) != self.get_input_value(self.prev_state,input_name)
+
+    def get_state(self):
+        return self.state
+    
+    def get_button(self,input_name):
+        return self.get_input_value(self.state,input_name)
+
+    def get_input_value(self, state, input_name):
         """Returns the value of a given input (button, trigger, thumbstick, DPad, or shoulder)."""
         # For Triggers
         if input_name in ['LeftTrigger', 'RightTrigger']:
             trigger_key = input_name[:-7]  # Remove "Trigger" from the end to match 'Left' or 'Right'
-            return self.state['Triggers'][trigger_key]
+            return state['Triggers'][trigger_key]
 
         # For Shoulders
-        elif input_name in self.state['Shoulders']:
-            return self.state['Shoulders'][input_name]
+        elif input_name in state['Shoulders']:
+            return state['Shoulders'][input_name]
 
         # For DPad
         elif input_name.startswith('DPad'):
             dpad_direction = input_name[4:]  # Get direction part like 'Left', 'Right', etc.
-            if dpad_direction in self.state['DPad']:
-                return self.state['DPad'][dpad_direction]
+            if dpad_direction in state['DPad']:
+                return state['DPad'][dpad_direction]
 
         # For Buttons and Other inputs (direct match)
-        elif input_name in self.state['Buttons']:
-            return self.state['Buttons'][input_name]
-        elif input_name in self.state['Other']:
-            return self.state['Other'][input_name]
+        elif input_name in state['Buttons']:
+            return state['Buttons'][input_name]
+        elif input_name in state['Other']:
+            return state['Other'][input_name]
 
         # For Thumbsticks (expecting something like "LeftThumbX" or "RightThumbY")
         elif 'Thumb' in input_name:
             thumbstick, axis = input_name[:-1], input_name[-1].upper()  # Split into thumbstick and axis
-            if thumbstick in self.state['Thumbsticks'] and axis in ['X', 'Y']:
+            if thumbstick in state['Thumbsticks'] and axis in ['X', 'Y']:
                 axis_index = 0 if axis == 'X' else 1  # Convert axis into index (0 for X, 1 for Y)
                 if (self.deadzone_value):
-                    return self.deadzone(self.state['Thumbsticks'][thumbstick][axis_index],.10)
-                return self.state['Thumbsticks'][thumbstick][axis_index]
+                    return self.deadzone(state['Thumbsticks'][thumbstick][axis_index],.10)
+                return state['Thumbsticks'][thumbstick][axis_index]
 
         # If input_name does not match any known inputs or patterns
         return "Unknown input"
