@@ -1,6 +1,7 @@
 from network import NetworkCommunication
 from robot import RobotControl
 from controller import Controller
+# lights GPIO 21,20,18
 
 def main():
     network = NetworkCommunication()
@@ -16,6 +17,7 @@ def main():
                 break
             # Process controller values
             controller.update_state(controller_values)
+            robot.update_control(controller)
 
     finally:
         network.close_connection()

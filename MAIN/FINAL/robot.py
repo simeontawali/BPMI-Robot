@@ -63,8 +63,18 @@ class RobotControl:
 
     def update_control(self, controller: Controller):
         """Preform Actions based on controller input"""
+
+        if (controller.state_change('LeftThumbX') and controller.state_change('LeftThumbY')):
+            X,Y = controller.get_duty_cycle
+            self.update_motors(X,Y)
+
         if controller.get_button('A') and controller.state_change('A'):
-            pass
+            if GPIO.input(self.led_pin) == GPIO.LOW:
+                print("LED ON")
+                GPIO.output(self.led_pin, GPIO.HIGH)  # Turn the LED ON
+            else:
+                print("LED OFF")
+                GPIO.output(self.led_pin, GPIO.LOW)  # Turn the LED OFF
         if controller.get_button('B') and controller.state_change('B'):
             pass
         if controller.get_button('X') and controller.state_change('X'):
