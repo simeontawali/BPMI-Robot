@@ -7,6 +7,8 @@ class Module():
         self.PWM_L_ADDRESS = 2     # 010
         self.PWM_R_ADDRESS = 0     # 000
         self.CONTROL_CODE = 40     # 7'b0101000 too add to the address
+        self.left_pwm = 0
+        self.right_pwm = 0
 
         # Setup serial port
         ser = serial.Serial('/dev/serial0', 9600, timeout=1)
@@ -34,6 +36,26 @@ class Module():
         else:
             print("Bad address")
 
+    def update(self):
+        if self.left_pwm == 0:
+            self.change(0,self.PWM_L_ADDRESS)
+            self.stop(self.PWM_L_ADDRESS)
+        else:
+            self.change(self.left_pwm,self.PWM_L_ADDRESS)
+        if self.right_pwm == 0:
+            self.change(0,self.PWM_R_ADDRESS)
+            self.stop(self.PWM_R_ADDRESS)
+        else:
+            self.change(self.left_pwm,self.PWM_R_ADDRESS)
+
+    def incr_l(self):
+        self.left_pwm += 1
+    def decr_l(self):
+            self.left_pwm -= 1
+    def incr_r(self):
+            self.right_pwm += 1
+    def decr_r(self):
+            self.right_pwm -= 1
 
     def operate(self, command):
         if self.ser.in_waiting > 0:

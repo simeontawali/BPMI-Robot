@@ -18,6 +18,7 @@ Additional Notes:
 """
 import RPi.GPIO as GPIO
 from controller import Controller
+from module import Module
 
 class RobotControl:
     def __init__(self, led_pin, pwm_left_pin, pwm_right_pin, freq):
@@ -26,6 +27,7 @@ class RobotControl:
         self.pwm_right_pin = pwm_right_pin
         self.freq = freq
         self.setup_gpio()
+        self.mod = Module()
 
     def setup_gpio(self):
         GPIO.setmode(GPIO.BCM)
@@ -65,7 +67,7 @@ class RobotControl:
         """Preform Actions based on controller input"""
 
         if (controller.state_change('LeftThumbX') and controller.state_change('LeftThumbY')):
-            X,Y = controller.get_duty_cycle
+            X,Y = controller.get_duty_cycle()
             self.update_motors(X,Y)
 
         if controller.get_button('A') and controller.state_change('A'):
@@ -90,13 +92,17 @@ class RobotControl:
         if controller.get_button('RightThumbY') and controller.state_change('RightThumbY'):
             pass
         if controller.get_button('DPadUp') and controller.state_change('DPadUp'):
-            pass
+            self.mod.incr_l()
+            self.mod.update()
         if controller.get_button('DPadDown') and controller.state_change('DPadDown'):
-            pass
+            self.mod.decr_l()
+            self.mod.update()
         if controller.get_button('DPadLeft') and controller.state_change('DPadLeft'):
-            pass
+            self.mod.decr_r()
+            self.mod.update()
         if controller.get_button('DPadRight') and controller.state_change('DPadRight'):
-            pass
+            self.mod.incr_r()
+            self.mod.update()
         if controller.get_button('LeftTrigger') > 0.1 and controller.state_change('LeftTrigger'):
             pass
         if controller.get_button('RightTrigger') > 0.1 and controller.state_change('RightTrigger'):
