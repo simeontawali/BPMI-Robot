@@ -1,38 +1,67 @@
-import RPi.GPIO as GPIO
-import smbus
-import time
+import serial
+from smbus2 import SMBus
 
 class Module():
-    def __init__(self):
-        # Setup I2C
-        bus = smbus.SMBus(1) # 1 should be /dev/i2c-1
-        DS1050_ADDRESS = 0x00 # Replace 0x00 with the DS1050's actual address, I dont know this yet
-        PWM_REG = 0x00 # PWM register address; not sure what this is yet
+    def __init__(self) -> None:
+        # Define I2C address for the DS1050Z
+        PWM_L_ADDRESS = 2     # 010
+        PWM_R_ADDRESS = 0     # 000
+        CONTROL_CODE = 40     # 7'b0101000 too add to the address
 
-        # Setup GPIO
-        GPIO.setmode(GPIO.BCM)
-        IN1_MOTOR1 = 2 # Motor 1 direction pin
-        IN1_MOTOR2 = 4 # Motor 2 direction pin
-        GPIO.setup(IN1_MOTOR1, GPIO.OUT)
-        GPIO.setup(IN1_MOTOR2, GPIO.OUT)
-        pwm = GPIO.PWM(2, 1000) # Set PWM frequency to 1000 Hz for now
+        # Setup serial port
+        ser = serial.Serial('/dev/serial0', 9600, timeout=1)
+        ser.flush()
+    # Function to send commands to DS1050Z via I2C
+    def send_pwm_command(self, address, command):
+        with SMBus(1) as bus:
+            bus.write_byte(address + self.CONTROL_CODE, command)
 
-    def set_pwm_duty_cycle(self,duty_cycle):
-        """
-        Set the PWM duty cycle on the DS1050.
-        :param duty_cycle: A value from 0 to 31 (5-bit resolution), where 31 is 100% duty cycle.
-        """
-        self.bus.write_byte_data(self.DS1050_ADDRESS, self.PWM_REG, duty_cycle) # TODO: implement func
+    def change(self, duty_cycle, address):
+        if duty_cycle == 100:
+            command = 32  # 100% duty cycle
+        else:
+            duty_cycle_mapped = int((duty_cycle / 100) * 31)
+            command = duty_cycle_mapped
+        self.send_pwm_command(address, command)
 
-# Function to control motor direction and speed
-def control_motor(self,motor, direction, speed):
-    if motor == 1:
-        GPIO.output(self.IN1_MOTOR1, direction)
-    elif motor == 2:
-        GPIO.output(self.IN1_MOTOR2, direction)
-    self.set_pwm_duty_cycle(speed) # Adjust this
+    def stop(self,address):
+        command = 192  # Shutdown command
+        self.send_pwm_command(address, command)
 
 
+    def operate(self, command):
+        if self.ser.in_waiting > 0:
+            if command:
+                drive_change = False
+                stop_PWM = False
+                
+                if command.startswith('R'):
+                    address = self.PWM_R_ADDRESS
+                    if command[1] == 'S':
+                        stop_PWM = True
+                    else:
+                        duty_cycle = int(command[1:])
+                        drive_change = True
+                        
+                elif command.startswith('L'):
+                    address = self.PWM_L_ADDRESS
+                    if command[1] == 'S':
+                        stop_PWM = True
+                    else:
+                        duty_cycle = int(command[1:])
+                        drive_change = True
+                        
+                if drive_change:
+                    if duty_cycle == 100:
+                        command = 32  # 100% duty cycle
+                    else:
+                        duty_cycle_mapped = int((duty_cycle / 100) * 31)
+                        command = duty_cycle_mapped
+                    self.send_pwm_command(address, command)
+                    
+                elif stop_PWM:
+                    command = 192  # Shutdown command
+                    self.send_pwm_command(address, command)
 
     def tape_module():
         pass
