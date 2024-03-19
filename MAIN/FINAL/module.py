@@ -4,9 +4,9 @@ from smbus2 import SMBus
 class Module():
     def __init__(self) -> None:
         # Define I2C address for the DS1050Z
-        PWM_L_ADDRESS = 2     # 010
-        PWM_R_ADDRESS = 0     # 000
-        CONTROL_CODE = 40     # 7'b0101000 too add to the address
+        self.PWM_L_ADDRESS = 2     # 010
+        self.PWM_R_ADDRESS = 0     # 000
+        self.CONTROL_CODE = 40     # 7'b0101000 too add to the address
 
         # Setup serial port
         ser = serial.Serial('/dev/serial0', 9600, timeout=1)
@@ -25,8 +25,14 @@ class Module():
         self.send_pwm_command(address, command)
 
     def stop(self,address):
-        command = 192  # Shutdown command
-        self.send_pwm_command(address, command)
+        if address == self.PWM_R_ADDRESS:
+            command = 192  # R 8'b11000000 command for PWM shutdown
+            self.send_pwm_command(address, command)
+        elif address == self.PWM_L_ADDRESS:
+            command = 128 # L 8'b10000000 command for PWM shutdown
+            self.send_pwm_command(address, command)
+        else:
+            print("Bad address")
 
 
     def operate(self, command):
