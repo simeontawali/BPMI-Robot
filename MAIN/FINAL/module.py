@@ -26,6 +26,7 @@ class Module():
             command = duty_cycle_mapped
         self.send_pwm_command(address, command)
 
+    # TODO: 128 and 192 may work for both in certian situatuons. figure out that case
     def stop(self,address):
         if address == self.PWM_R_ADDRESS:
             command = 192  # R 8'b11000000 command for PWM shutdown
@@ -48,14 +49,23 @@ class Module():
         else:
             self.change(self.left_pwm,self.PWM_R_ADDRESS)
 
+# increment and decrement pwm counter for l/r respectively
     def incr_l(self):
-        self.left_pwm += 1
+        if self.left_pwm < 32:
+            self.left_pwm += 1
+            self.update()
     def decr_l(self):
-            self.left_pwm -= 1
+            if self.left_pwm > 0:
+                self.left_pwm -= 1
+                self.update()
     def incr_r(self):
-            self.right_pwm += 1
+            if self.right_pwm < 32:
+                self.right_pwm += 1
+                self.update()
     def decr_r(self):
-            self.right_pwm -= 1
+            if self.right_pwm > 0:
+                self.right_pwm -= 1
+                self.update()
 
     def operate(self, command):
         if self.ser.in_waiting > 0:
