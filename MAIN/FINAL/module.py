@@ -11,8 +11,8 @@ class Module():
         self.right_pwm = 0
 
         # Setup serial port
-        ser = serial.Serial('/dev/serial0', 9600, timeout=1)
-        ser.flush()
+        #ser = serial.Serial('/dev/serial0', 9600, timeout=1)
+        #ser.flush()
     # Function to send commands to DS1050Z via I2C
     def send_pwm_command(self, address, command):
         with SMBus(1) as bus:
@@ -68,7 +68,7 @@ class Module():
                 self.update()
 
     def operate(self, command):
-        if self.ser.in_waiting > 0:
+        #if self.ser.in_waiting > 0:
             if command:
                 drive_change = False
                 stop_PWM = False
