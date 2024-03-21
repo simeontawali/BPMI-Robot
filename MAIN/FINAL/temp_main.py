@@ -9,9 +9,9 @@ def main():
     controller = Controller()
 
     try:
-        network.accept_connection()
+        conn = network.accept_connection()
         while True:
-            controller_values = network.receive_data()
+            controller_values = network.receive_data(conn)    
             if controller_values is None:
                 # controller.update_state(controller_values)
                 break

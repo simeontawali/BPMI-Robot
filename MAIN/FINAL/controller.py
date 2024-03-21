@@ -18,6 +18,7 @@ https://www.instructables.com/Joystick-to-Differential-Drive-Python/
 Additional Notes:
 
 """
+import copy
 import math
 
 class Controller:
@@ -53,7 +54,7 @@ class Controller:
                 'Back': False  # Back Button
             }
         }
-        self.prev_state = self.state.copy()
+        self.prev_state = copy.deepcopy(self.state)
         self.prev_controller_values = None
         self.deadzone_value = False
 
@@ -98,7 +99,7 @@ class Controller:
                 print(f"    {key}: {value}")
 
     def update_state(self, new_values):
-        self.prev_state = self.state.copy()
+        self.prev_state = copy.deepcopy(self.state)
         self.update(self.state,new_values)
 
     def update_prev_state(self,prev_controller_values):
@@ -164,17 +165,18 @@ class Controller:
     def get_duty_cycle(self):
         min_joystick, max_joystick = -1, 1  # joystick ranges
         min_speed, max_speed = -100, 100   # speed ranges to be mapped to PWM
-        (X,Y) = self.state['ThumbSticks']['Left']
+        (X,Y) = self.state['Thumbsticks']['LeftThumb']
         (left_speed,right_speed) = self.joystick_to_diff(X,Y,min_joystick,max_joystick,min_speed,max_speed)
         left_duty_cycle = self.map_val(left_speed, min_speed, max_speed, 5, 10)  # range, adjust as needed
         right_duty_cycle = self.map_val(right_speed, min_speed, max_speed, 5, 10)  # range, adjust as needed
         if (self.deadzone_value):
-            if (duty_cycle_l >= 7.4 and duty_cycle_l <= 7.6):
-                duty_cycle_l = 0
-            if (duty_cycle_r >= 7.4 and duty_cycle_r <= 7.6):
-                duty_cycle_r = 0
+            if (left_duty_cycle >= 7.4 and left_duty_cycle <= 7.6):
+                left_duty_cycle = 0
+            if (right_duty_cycle >= 7.4 and right_duty_cycle <= 7.6):
+                right_duty_cycle = 0
         return left_duty_cycle,right_duty_cycle
 
+    @staticmethod
     def map_val(v, in_min, in_max, out_min, out_max):
         # Check that the value is at least in_min
         if v < in_min:
@@ -184,7 +186,7 @@ class Controller:
             v = in_max
         return (v - in_min) * (out_max - out_min) // (in_max - in_min) + out_min
  
-    @staticmethod
+
     def joystick_to_diff(self,x, y, min_joystick, max_joystick, min_speed, max_speed):
         if x == 0 and y == 0:
             return (0, 0)
