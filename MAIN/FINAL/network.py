@@ -61,7 +61,7 @@ class NetworkCommunication:
         if self.send_socket:
             self.send_socket.sendall(json.dumps(data).encode('utf-8'))
 
-    def close_connections(self):
+    def close_connection(self):
         """Closes both sending and receiving sockets."""
         if self.receive_socket:
             self.receive_socket.close()

@@ -57,7 +57,7 @@ class Controller:
         self.prev_controller_values = None
         self.deadzone_value = False
 
-    def update(state, new_values):
+    def update(self, state, new_values):
         try:
             # Update Thumbsticks
             state['Thumbsticks']['LeftThumb'] = tuple(new_values['LeftThumb'])
