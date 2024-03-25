@@ -12,6 +12,7 @@ PORT = 12345
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((HOST, PORT))
 s.listen()
+print("Starting up controller")
 
 # Accept a connection
 conn, addr = s.accept()

@@ -45,7 +45,7 @@ def run_ethernet_script():
 
 try:
     # Start the streaming server script in a separate process
-    server_process = subprocess.Popen(server_command)
+    # server_process = subprocess.Popen(server_command)
     # Add a short delay to ensure that the streaming server has started
     time.sleep(0.1)
     
@@ -54,26 +54,26 @@ try:
     ethernet_thread.start()
 
     # Wait for the streaming server process to complete
-    server_process.wait()
+    #server_process.wait()
 except KeyboardInterrupt:
     # Handle keyboard interrupt (Ctrl+C) to gracefully terminate both processes
-    server_process.terminate()
+    #server_process.terminate()
     ethernet_thread.join()  # Wait for the Ethernet thread to finish
 
 
 
 try:
     # Start the streaming server script in a separate process
-    server_process = subprocess.Popen(server_command)
+    #server_process = subprocess.Popen(server_command)
     # Add a short delay to ensure that the streaming server has started
     time.sleep(0.1)
     # Start the other Python script in a separate process
     ethernet_process = subprocess.Popen(ethernet_command)
     # Wait for both processes to complete
-    server_process.wait()
+    #server_process.wait()
     ethernet_process.wait()
 except KeyboardInterrupt:
     # Handle keyboard interrupt (Ctrl+C) to gracefully terminate both processes
-    server_process.terminate()
+    #server_process.terminate()
     ethernet_process.terminate()
 

@@ -103,18 +103,15 @@ prev_left_thumb_state = (0, 0)
 prev_right_thumb_state = (0, 0)
 def control(controller_values):
     global prev_buttons_state, prev_right_trigger_state, prev_left_trigger_state, prev_left_thumb_state, prev_right_thumb_state
-    left_thumb = controller_values.get('LeftThumb', (0, 0))  # Provides a default value of (0, 0)
+    left_thumb = controller_values.get('LeftThumb', (0, 0))
     left_thumb_x, left_thumb_y = left_thumb
-    # left_thumb_x, left_thumb_y = controller_values['LeftThumb']
-    right_thumb = controller_values.get('LeftThumb', (0, 0))  # Provides a default value of (0, 0)
+    right_thumb = controller_values.get('RightThumb', (0, 0))
     right_thumb_x, right_thumb_y = right_thumb
-    # right_thumb_x, right_thumb_y = controller_values['RightThumb']
-    left_trigger, right_trigger = controller_values['Triggers']
-    A, B, X, Y = controller_values['Buttons']
-    LeftShoulder, RightShoulder = controller_values['Shoulders']
-    DPadUp, DPadDown, DpadLeft, DpadRight = controller_values['DPad']
-    Start, Back = controller_values['Other']
-    # buttons_pressed = controller_values['buttons']
+    left_trigger, right_trigger = controller_values.get('Triggers', (0, 0))
+    A, B, X, Y = controller_values.get('Buttons', (False, False, False, False))
+    LeftShoulder, RightShoulder = controller_values.get('Shoulders', (False, False))
+    DPadUp, DPadDown, DpadLeft, DpadRight = controller_values.get('DPad', (False, False, False, False))
+    Start, Back = controller_values.get('Other', (False, False))
 
     # buttons_pressed = {
     #     "A" : A
@@ -218,7 +215,7 @@ def deadzone(value, threshold):
      
 
 def movement(left_thumb_x, left_thumb_y):
-    (R,L) = joystickToDiff(left_thumb_x,left_thumb_y,-1,1,-100,100)
+    (L,R) = joystickToDiff(left_thumb_x,left_thumb_y,-1,1,-100,100)
     L = L + 100
     R = R + 100
     # deadzone on/off

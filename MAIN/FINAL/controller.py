@@ -18,8 +18,8 @@ https://www.instructables.com/Joystick-to-Differential-Drive-Python/
 Additional Notes:
 
 """
-import copy
 import math
+import copy
 
 class Controller:
     
@@ -56,7 +56,9 @@ class Controller:
         }
         self.prev_state = copy.deepcopy(self.state)
         self.prev_controller_values = None
-        self.deadzone_value = False
+        self.deadzone_value = True
+        self.thumbstick_deadzone = 0.15
+        self.motor_deadzone = 0.04
 
     def update(self, state, new_values):
         try:
@@ -100,6 +102,7 @@ class Controller:
 
     def update_state(self, new_values):
         self.prev_state = copy.deepcopy(self.state)
+        #self.update_prev_state(self.state)
         self.update(self.state,new_values)
 
     def update_prev_state(self,prev_controller_values):
@@ -108,6 +111,7 @@ class Controller:
     def state_change(self, input_name):
         """Returns true if current state has changed from prev state, else returns false"""
         return self.get_input_value(self.state,input_name) != self.get_input_value(self.prev_state,input_name)
+        #return True
 
     def get_state(self):
         return self.state
@@ -144,7 +148,7 @@ class Controller:
             if thumbstick in state['Thumbsticks'] and axis in ['X', 'Y']:
                 axis_index = 0 if axis == 'X' else 1  # Convert axis into index (0 for X, 1 for Y)
                 if (self.deadzone_value):
-                    return self.deadzone(state['Thumbsticks'][thumbstick][axis_index],.10)
+                    return self.deadzone(state['Thumbsticks'][thumbstick][axis_index],self.thumbstick_deadzone)
                 return state['Thumbsticks'][thumbstick][axis_index]
 
         # If input_name does not match any known inputs or patterns
@@ -163,18 +167,27 @@ class Controller:
         self.deadzone_value = deadzone_value
 
     def get_duty_cycle(self):
+        offsetL = -0.4
+        offsetR = -0.4
         min_joystick, max_joystick = -1, 1  # joystick ranges
         min_speed, max_speed = -100, 100   # speed ranges to be mapped to PWM
         (X,Y) = self.state['Thumbsticks']['LeftThumb']
+        print("\r")
+        print(f"controller: {X},{Y}")
         (left_speed,right_speed) = self.joystick_to_diff(X,Y,min_joystick,max_joystick,min_speed,max_speed)
-        left_duty_cycle = self.map_val(left_speed, min_speed, max_speed, 5, 10)  # range, adjust as needed
-        right_duty_cycle = self.map_val(right_speed, min_speed, max_speed, 5, 10)  # range, adjust as needed
+        print(f"joystick_to_diff: {left_speed},{right_speed}")
+        left_duty_cycle = self.map_val(left_speed, min_speed, max_speed, 4.5+offsetL,10.5+offsetL)  # range, adjust as needed
+        right_duty_cycle = self.map_val(right_speed, min_speed, max_speed, 4.5+offsetR, 10.5+offsetR)  # range, adjust as needed
+        stop_motors = False
         if (self.deadzone_value):
-            if (left_duty_cycle >= 7.4 and left_duty_cycle <= 7.6):
-                left_duty_cycle = 0
-            if (right_duty_cycle >= 7.4 and right_duty_cycle <= 7.6):
-                right_duty_cycle = 0
-        return left_duty_cycle,right_duty_cycle
+             if (left_duty_cycle >= (7.5+offsetL - 3*self.motor_deadzone) and left_duty_cycle <= (7.5+offsetL + 3*self.motor_deadzone)):
+                 left_duty_cycle = 7.5+offsetL
+                 stop_motors = True
+             if (right_duty_cycle >= (7.5+offsetR - 3*self.motor_deadzone) and right_duty_cycle <= (7.5+offsetR + 3*self.motor_deadzone)):
+                 right_duty_cycle = 7.5+offsetR
+                 stop_motors = True
+        print(f"duty cycles: {left_duty_cycle},{right_duty_cycle}")
+        return left_duty_cycle,right_duty_cycle,stop_motors
 
     @staticmethod
     def map_val(v, in_min, in_max, out_min, out_max):
@@ -184,9 +197,8 @@ class Controller:
         # Check that the value is at most in_max
         if v > in_max:
             v = in_max
-        return (v - in_min) * (out_max - out_min) // (in_max - in_min) + out_min
+        return (v - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
  
-
     def joystick_to_diff(self,x, y, min_joystick, max_joystick, min_speed, max_speed):
         if x == 0 and y == 0:
             return (0, 0)
