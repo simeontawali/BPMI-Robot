@@ -67,6 +67,19 @@ class Module():
                 self.right_pwm -= 1
                 self.update()
 
+    def actuator_forward(self):
+        self.left_pwm = 16
+        self.right_pwm = 0
+        self.update()
+    def actuator_backward(self):
+        self.right_pwm = 16
+        self.right_pwm = 0
+        self.update()
+    def actuator_off(self):
+        self.left_pwm = 0
+        self.right_pwm = 0
+        self.update()
+
     def operate(self, command):
         #if self.ser.in_waiting > 0:
             if command:

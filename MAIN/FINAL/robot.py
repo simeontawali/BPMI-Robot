@@ -19,6 +19,7 @@ Additional Notes:
 import RPi.GPIO as GPIO
 from controller import Controller
 from module import Module
+import time
 
 class RobotControl:
     def __init__(self, led_wf_pin, led_wu_pin, led_uv_pin, pwm_left_pin, pwm_right_pin):
@@ -123,17 +124,25 @@ class RobotControl:
         if controller.get_button('RightThumbY') and controller.state_change('RightThumbY'):
             pass
         if controller.get_button('DPadUp') and controller.state_change('DPadUp'):
-            self.mod.incr_l()
-            self.mod.update()
+            # self.mod.incr_l()
+            # self.mod.update()
+            self.mod.actuator_forward()
+            time.sleep(1)
+            self.mod.actuator_off()
         if controller.get_button('DPadDown') and controller.state_change('DPadDown'):
-            self.mod.decr_l()
-            self.mod.update()
+            # self.mod.decr_l()
+            # self.mod.update()
+            self.mod.actuator_forward()
+            time.sleep(1)
+            self.mod.actuator_off()
         if controller.get_button('DPadLeft') and controller.state_change('DPadLeft'):
-            self.mod.decr_r()
-            self.mod.update()
+            # self.mod.decr_r()
+            # self.mod.update()
+            pass
         if controller.get_button('DPadRight') and controller.state_change('DPadRight'):
-            self.mod.incr_r()
-            self.mod.update()
+            # self.mod.incr_r()
+            # self.mod.update()
+            pass
         if controller.get_button('LeftTrigger') > 0.1 and controller.state_change('LeftTrigger'):
             pass
         if controller.get_button('RightTrigger') > 0.1 and controller.state_change('RightTrigger'):
