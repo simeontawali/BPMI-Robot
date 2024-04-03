@@ -167,14 +167,14 @@ class Controller:
         self.deadzone_value = deadzone_value
 
     def get_duty_cycle(self):
-        offsetL = -0.4
-        offsetR = -0.4
+        offsetL = -0.45
+        offsetR = -0.45
         min_joystick, max_joystick = -1, 1  # joystick ranges
         min_speed, max_speed = -100, 100   # speed ranges to be mapped to PWM
         (X,Y) = self.state['Thumbsticks']['LeftThumb']
         print("\r")
         print(f"controller: {X},{Y}")
-        (left_speed,right_speed) = self.joystick_to_diff(X,Y,min_joystick,max_joystick,min_speed,max_speed)
+        (left_speed,right_speed) = self.joystick_to_diff(Y,X,min_joystick,max_joystick,min_speed,max_speed) # X,Y,min_joystick,max_joystick,min_speed,max_speed)
         print(f"joystick_to_diff: {left_speed},{right_speed}")
         left_duty_cycle = self.map_val(left_speed, min_speed, max_speed, 4.5+offsetL,10.5+offsetL)  # range, adjust as needed
         right_duty_cycle = self.map_val(right_speed, min_speed, max_speed, 4.5+offsetR, 10.5+offsetR)  # range, adjust as needed

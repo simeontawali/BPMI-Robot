@@ -29,6 +29,7 @@ class RobotControl:
         self.pwm_left_pin = pwm_left_pin
         self.pwm_right_pin = pwm_right_pin
         self.motor_stop_pin = 19
+        self.scrubber_pin = 23
         self.freq = 50
         self.setup_gpio()
         self.mod = Module()
@@ -41,6 +42,7 @@ class RobotControl:
         GPIO.setup(self.pwm_left_pin, GPIO.OUT)
         GPIO.setup(self.pwm_right_pin, GPIO.OUT)
         GPIO.setup(self.motor_stop_pin,GPIO.OUT)
+        GPIO.setup(self.scrubber_pin,GPIO.OUT)
         self.p_l = GPIO.PWM(self.pwm_left_pin, self.freq)
         self.p_r = GPIO.PWM(self.pwm_right_pin, self.freq)
         self.p_l.start(0)
@@ -107,7 +109,12 @@ class RobotControl:
                 print("FORWARD WHITE LED OFF")
                 GPIO.output(self.led_wf_pin, GPIO.LOW)  # Turn the LED OFF
         if controller.get_button('X') and controller.state_change('X'):
-            self.stop()
+            if GPIO.input(self.scrubber_pin) == GPIO.LOW:
+                print("module scrubber ON")
+                GPIO.output(self.scrubber_pin, GPIO.HIGH)  # Turn the LED ON
+            else:
+                print("module scrubber OFF")
+                GPIO.output(self.scrubber_pin, GPIO.LOW)  # Turn the LED OFF
         if controller.get_button('Y') and controller.state_change('Y'):
             if GPIO.input(self.led_uv_pin) == GPIO.LOW:
                 print("UV LED ON")
@@ -119,25 +126,41 @@ class RobotControl:
             pass
         if controller.get_button('LeftThumbY') > 0.1 and controller.state_change('RightThumbX'):
             pass
-        if controller.get_button('RightThumbX') and controller.state_change('RightThumbX'):
+        if controller.get_button('RightThumbX') > 0.5 and controller.state_change('RightThumbX'):
+            #self.mod.actuator_forward()
+            #print("Moving actuator forwards")
+            pass
+        elif controller.get_button('RightThumbX') < -0.5 and controller.state_change('RightThumbX'):
+            # self.mod.actuator_backward()
+            # print("Moving actuator backwards")
+            pass
+        else:
+            #self.mod.actuator_off()
+            #print("Stopping actuator")
             pass
         if controller.get_button('RightThumbY') and controller.state_change('RightThumbY'):
             pass
         if controller.get_button('DPadUp') and controller.state_change('DPadUp'):
-            # self.mod.incr_l()
-            # self.mod.update()
+            #self.mod.incr_l()
+            #self.mod.update()
             self.mod.actuator_forward()
-            time.sleep(1)
+            print("Moving actuator forwards")
+        elif controller.state_change('DPadUp'):
             self.mod.actuator_off()
+            print("No longer moving forwards")
         if controller.get_button('DPadDown') and controller.state_change('DPadDown'):
             # self.mod.decr_l()
             # self.mod.update()
-            self.mod.actuator_forward()
-            time.sleep(1)
+            self.mod.actuator_backward()
+            print("Moving actuator backwards")
+        elif controller.state_change('DPadDown'):
             self.mod.actuator_off()
+            print ("no longer moving backwards")
         if controller.get_button('DPadLeft') and controller.state_change('DPadLeft'):
             # self.mod.decr_r()
             # self.mod.update()
+            #self.mod.actuator_off()
+            #print("Stopping actuator")
             pass
         if controller.get_button('DPadRight') and controller.state_change('DPadRight'):
             # self.mod.incr_r()
