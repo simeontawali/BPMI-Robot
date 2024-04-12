@@ -49,6 +49,23 @@ class NetworkCommunication:
         if data:
             return json.loads(data.decode('utf-8'))
         return None
+    
+    def receive_control_data(conn):
+        buffer = ""
+        try:
+            while True:
+                data = conn.recv(1024) # update to 4096 if needed
+                if not data:
+                    break
+                buffer += data.decode('utf-8')
+                while '\n' in buffer:
+                    message, buffer = buffer.split('\n', 1)
+                    if message:
+                        yield json.loads(message)
+        except Exception as e:
+            print(f"Error processing data: {e}")
+            yield None
+
 
     def setup_send_connection(self):
         """Establishes a connection for sending data."""

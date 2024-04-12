@@ -11,7 +11,9 @@ def main():
     try:
         conn = network.accept_connection()
         while True:
-            controller_values = network.receive_data(conn)
+            # controller_values = network.receive_data(conn)
+            # delimiter update
+            controller_values = network.receive_control_data(conn)
             if controller_values is None:
                 # controller.update_state(controller_values)
                 pass
