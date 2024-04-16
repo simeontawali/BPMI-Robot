@@ -5,7 +5,7 @@ from controller import Controller
 
 def main():
     network = NetworkCommunication()
-    robot = RobotControl(led_wf_pin=20, led_wu_pin=21, led_uv_pin=18, pwm_left_pin=12, pwm_right_pin=13)
+    robot = RobotControl()
     controller = Controller()
 
     try:

@@ -166,18 +166,40 @@ class Controller:
         print(f"Deadzone is {'active' if deadzone_value else 'not active'}\n")
         self.deadzone_value = deadzone_value
 
-    def get_duty_cycle(self):
-        offsetL = -0.45
-        offsetR = -0.45
-        min_joystick, max_joystick = -1, 1  # joystick ranges
+    def get_duty_cycle(self, speed, dir):
+        # offsets based on measured PWM values
+        offsetL = 0
+        offsetR = 0
+
+        # set motor direction values
+        if dir == 'L':
+            X = -1
+            Y = 0
+        elif dir == 'R':
+            X = 1
+            Y = 0
+        elif dir == 'F':
+            X = 0
+            Y = 1
+        elif dir == 'B':
+            X = 0
+            Y = -1
+        elif dir == 'S':
+            X = 0
+            Y = 0
+
+        # scale by speed
+        X = X*speed
+        Y = Y*speed
         min_speed, max_speed = -100, 100   # speed ranges to be mapped to PWM
-        (X,Y) = self.state['Thumbsticks']['LeftThumb']
-        print("\r")
-        print(f"controller: {X},{Y}")
-        (left_speed,right_speed) = self.joystick_to_diff(Y,X,min_joystick,max_joystick,min_speed,max_speed) # X,Y,min_joystick,max_joystick,min_speed,max_speed)
+        
+        # translate to differential drive
+        (left_speed,right_speed) = self.joystick_to_diff(Y,X,min_speed,max_speed,min_speed,max_speed) # X,Y,min_joystick,max_joystick,min_speed,max_speed)
         print(f"joystick_to_diff: {left_speed},{right_speed}")
         left_duty_cycle = self.map_val(left_speed, min_speed, max_speed, 4.5+offsetL,10.5+offsetL)  # range, adjust as needed
         right_duty_cycle = self.map_val(right_speed, min_speed, max_speed, 4.5+offsetR, 10.5+offsetR)  # range, adjust as needed
+
+        # control for relay-stopped deadzone
         stop_motors = False
         if (self.deadzone_value):
              if (left_duty_cycle >= (7.5+offsetL - 3*self.motor_deadzone) and left_duty_cycle <= (7.5+offsetL + 3*self.motor_deadzone)):
@@ -186,6 +208,7 @@ class Controller:
              if (right_duty_cycle >= (7.5+offsetR - 3*self.motor_deadzone) and right_duty_cycle <= (7.5+offsetR + 3*self.motor_deadzone)):
                  right_duty_cycle = 7.5+offsetR
                  stop_motors = True
+        
         print(f"duty cycles: {left_duty_cycle},{right_duty_cycle}")
         return left_duty_cycle,right_duty_cycle,stop_motors
 

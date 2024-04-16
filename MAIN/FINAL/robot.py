@@ -17,53 +17,67 @@ Additional Notes:
 
 """
 import RPi.GPIO as GPIO
+import os
 from controller import Controller
 from module import Module
 import time
 
 class RobotControl:
-    def __init__(self, led_wf_pin, led_wu_pin, led_uv_pin, pwm_left_pin, pwm_right_pin):
-        self.led_wf_pin = led_wf_pin
-        self.led_wu_pin = led_wu_pin
-        self.led_uv_pin = led_uv_pin
-        self.pwm_left_pin = pwm_left_pin
-        self.pwm_right_pin = pwm_right_pin
-        self.motor_stop_pin = 19
-        self.scrubber_pin = 23
-        self.freq = 50
-        self.setup_gpio()
+    def __init__(self):
+        self.led_wf_pin = 20
+        self.led_wu_pin = 21
+        self.led_uv_pin = 18
+
+        self.motor_stop_pin = 15
+        self.pwm_left_pin_path = '/sys/class/pwm/pwmchip0/pwm0'
+        self.pwm_right_pin_path = '/sys/class/pwm/pwmchip0/pwm1'
+        self.pwm_export_path = '/sys/class/pwm/pwmchip0/export'
+        self.freq = 50 # frequency in Hz
+        self.period = 1/self.freq * 1e9 # period in nano seconds
+        self.speed = 0
+        self.driving = 'S'
+
         self.mod = Module()
+        self.scrubber_pin = 23
+
+        self.setup_gpio()
 
     def setup_gpio(self):
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.led_wf_pin, GPIO.OUT)
         GPIO.setup(self.led_wu_pin,GPIO.OUT)
         GPIO.setup(self.led_uv_pin,GPIO.OUT)
-        GPIO.setup(self.pwm_left_pin, GPIO.OUT)
-        GPIO.setup(self.pwm_right_pin, GPIO.OUT)
         GPIO.setup(self.motor_stop_pin,GPIO.OUT)
         GPIO.setup(self.scrubber_pin,GPIO.OUT)
-        self.p_l = GPIO.PWM(self.pwm_left_pin, self.freq)
-        self.p_r = GPIO.PWM(self.pwm_right_pin, self.freq)
-        self.p_l.start(0)
-        self.p_r.start(0)
+
+        duty_cycle = 7.5 # initial duty cycle of 7.5% (arbitrary since relay will be stopping the motors)
+        duty_cycle_period = duty_cycle/100*self.period
+        GPIO.output(self.motor_stop_pin, GPIO.LOW) # start relay in stopped position
+
+        os.system(f'echo 1 > {self.pwm_export_path}')
+        os.system(f'echo 0 > {self.pwm_export_path}')
+        os.system(f'echo {round(self.period)} > {self.pwm_left_pin_path}/period')
+        os.system(f'echo {round(self.period)} > {self.pwm_right_pin_path}/period')
+        os.system(f'echo {round(duty_cycle_period)}> {self.pwm_left_pin_path}/duty_cycle')
+        os.system(f'echo {round(duty_cycle_period)} > {self.pwm_right_pin_path}/duty_cycle')
+        os.system(f'echo 1 > {self.pwm_left_pin_path}/enable')
+        os.system(f'echo 1 > {self.pwm_right_pin_path}/enable')
+
+        
+        
+
 
     def update_motors(self, duty_cycle_l, duty_cycle_r, stop):
-        # Adjust PWM based on duty cycle
-        self.p_l.ChangeDutyCycle(duty_cycle_l)
-        self.p_r.ChangeDutyCycle(duty_cycle_r)
+        duty_cycle_period_l = duty_cycle_l/100*self.period
+        duty_cycle_period_r = duty_cycle_r/100*self.period
+
+        os.system(f'echo {round(duty_cycle_period_l)} > {self.pwm_left_pin_path}/duty_cycle')
+        os.system(f'echo {round(duty_cycle_period_r)} > {self.pwm_right_pin_path}/duty_cycle')
+
         if (not self.motors_stopped()) and stop:
             self.stop_motors_toggle()
         elif self.motors_stopped() and (not stop):
             self.stop_motors_toggle()
-
-    def start(self):
-        self.p_l.start(0)
-        self.p_l.start(0)
-        
-    def stop(self):
-        self.p_l.stop()
-        self.p_r.stop()
 
     def forward(self, distance):
         pass
@@ -78,44 +92,48 @@ class RobotControl:
 
     def stop_motors_toggle(self):
         if GPIO.input(self.motor_stop_pin) == GPIO.LOW:
-            print("MOTORS STOPPED")
             GPIO.output(self.motor_stop_pin, GPIO.HIGH)
         else:
-            print("MOTORS CONTINUING")
             GPIO.output(self.motor_stop_pin, GPIO.LOW) 
 
     def motors_stopped(self):
-        return GPIO.input(self.motor_stop_pin) == GPIO.HIGH
+        return GPIO.input(self.motor_stop_pin) == GPIO.LOW
+
+    def update_control(self, controller: Controller):
+        """Preform Actions based on controller input"""
+        scrub = False
+        if (controller.state_change('LeftThumbX') or controller.state_change('LeftThumbY')):
+            X,Y,stop = controller.get_duty_cycle()
+            self.update_motors(X,Y,stop)
 
     def update_control(self, controller: Controller):
         """Preform Actions based on controller input"""
 
         if (controller.state_change('LeftThumbX') or controller.state_change('LeftThumbY')):
-            X,Y,stop = controller.get_duty_cycle()
-            self.update_motors(X,Y,stop)
-
-        if controller.get_button('A') and controller.state_change('A'):
+            pass
+        if controller.get_button('A') and controller.state_change('A'): # underside white LED control
             if GPIO.input(self.led_wu_pin) == GPIO.LOW:
                 print("UNDERSIDE WHITE LED ON")
                 GPIO.output(self.led_wu_pin, GPIO.HIGH)  # Turn the LED ON
             else:
                 print("UNDERSIDE WHITE LED OFF")
                 GPIO.output(self.led_wu_pin, GPIO.LOW)  # Turn the LED OFF
-        if controller.get_button('B') and controller.state_change('B'):
+        if controller.get_button('B') and controller.state_change('B'): # forward white LED control
             if GPIO.input(self.led_wf_pin) == GPIO.LOW:
                 print("FORWARD WHITE LED ON")
                 GPIO.output(self.led_wf_pin, GPIO.HIGH)  # Turn the LED ON
             else:
                 print("FORWARD WHITE LED OFF")
                 GPIO.output(self.led_wf_pin, GPIO.LOW)  # Turn the LED OFF
-        if controller.get_button('X') and controller.state_change('X'):
+        if controller.get_button('X') and controller.state_change('X'): # tape module scrubber control
             if GPIO.input(self.scrubber_pin) == GPIO.LOW:
                 print("module scrubber ON")
-                GPIO.output(self.scrubber_pin, GPIO.HIGH)  # Turn the LED ON
+                GPIO.output(self.scrubber_pin, GPIO.HIGH)  # Turn the scrubber ON
+                self.mod.actuator_off()
             else:
                 print("module scrubber OFF")
-                GPIO.output(self.scrubber_pin, GPIO.LOW)  # Turn the LED OFF
-        if controller.get_button('Y') and controller.state_change('Y'):
+                GPIO.output(self.scrubber_pin, GPIO.LOW)  # Turn the scrubber OFF
+        if controller.get_button('Y') and controller.state_change('Y'): # UV LED control
             if GPIO.input(self.led_uv_pin) == GPIO.LOW:
                 print("UV LED ON")
                 GPIO.output(self.led_uv_pin, GPIO.HIGH)  # Turn the LED ON
@@ -127,53 +145,73 @@ class RobotControl:
         if controller.get_button('LeftThumbY') > 0.1 and controller.state_change('RightThumbX'):
             pass
         if controller.get_button('RightThumbX') > 0.5 and controller.state_change('RightThumbX'):
-            #self.mod.actuator_forward()
-            #print("Moving actuator forwards")
             pass
-        elif controller.get_button('RightThumbX') < -0.5 and controller.state_change('RightThumbX'):
-            # self.mod.actuator_backward()
-            # print("Moving actuator backwards")
+        if controller.get_button('RightThumbY') > 0.5 and controller.state_change('RightThumbY'):
             pass
-        else:
-            #self.mod.actuator_off()
-            #print("Stopping actuator")
-            pass
-        if controller.get_button('RightThumbY') and controller.state_change('RightThumbY'):
-            pass
-        if controller.get_button('DPadUp') and controller.state_change('DPadUp'):
-            #self.mod.incr_l()
-            #self.mod.update()
-            self.mod.actuator_forward()
-            print("Moving actuator forwards")
+        if controller.get_button('DPadUp') and controller.state_change('DPadUp'): # drive motor forward
+            L,R,stop = controller.get_duty_cycle(self.speed,'F')
+            self.driving = 'F'
+            print('Moving forward')
+            self.update_motors(L,R,stop)
         elif controller.state_change('DPadUp'):
-            self.mod.actuator_off()
-            print("No longer moving forwards")
-        if controller.get_button('DPadDown') and controller.state_change('DPadDown'):
-            # self.mod.decr_l()
-            # self.mod.update()
-            self.mod.actuator_backward()
-            print("Moving actuator backwards")
+            L,R,stop = controller.get_duty_cycle(self.speed,'S')
+            self.driving = 'S'
+            print('Stopping')
+            self.update_motors(L,R,stop)
+        if controller.get_button('DPadDown') and controller.state_change('DPadDown'): # drive motor backward
+            L,R,stop = controller.get_duty_cycle(self.speed,'B')
+            self.driving = 'B'
+            print('Moving backward')
+            self.update_motors(L,R,stop)
         elif controller.state_change('DPadDown'):
-            self.mod.actuator_off()
-            print ("no longer moving backwards")
-        if controller.get_button('DPadLeft') and controller.state_change('DPadLeft'):
-            # self.mod.decr_r()
-            # self.mod.update()
-            #self.mod.actuator_off()
-            #print("Stopping actuator")
-            pass
-        if controller.get_button('DPadRight') and controller.state_change('DPadRight'):
-            # self.mod.incr_r()
-            # self.mod.update()
-            pass
-        if controller.get_button('LeftTrigger') > 0.1 and controller.state_change('LeftTrigger'):
-            pass
-        if controller.get_button('RightTrigger') > 0.1 and controller.state_change('RightTrigger'):
-            pass
-        if controller.get_button('LeftShoulder') and controller.state_change('LeftShoulder'):
-            pass
-        if controller.get_button('RightShoulder') and controller.state_change('RightShoulder'):
-            pass
+            L,R,stop = controller.get_duty_cycle(self.speed,'S')
+            self.driving = 'S'
+            print('Stopping')
+            self.update_motors(L,R,stop)
+        if controller.get_button('DPadLeft') and controller.state_change('DPadLeft'): # drive motor left
+            L,R,stop = controller.get_duty_cycle(self.speed,'L')
+            self.driving = 'L'
+            print('Turing left')
+            self.update_motors(L,R,stop)
+        elif controller.state_change('DPadLeft'):
+            L,R,stop = controller.get_duty_cycle(self.speed,'S')
+            self.driving = 'S'
+            print('Stopping')
+            self.update_motors(L,R,stop)
+        if controller.get_button('DPadRight') and controller.state_change('DPadRight'): # drive motor right
+            L,R,stop = controller.get_duty_cycle(self.speed,'R')
+            self.driving = 'R'
+            print('Turing right')
+            self.update_motors(L,R,stop)
+        elif controller.state_change('DPadRight'):
+            L,R,stop = controller.get_duty_cycle(self.speed,'S')
+            self.driving = 'S'
+            print('Stopping')
+            self.update_motors(L,R,stop)
+        if controller.get_button('LeftTrigger') > 0.1 and controller.state_change('LeftTrigger'): # tape module actuator control
+            self.mod.actuator_forward()
+            GPIO.output(self.scrubber_pin, GPIO.LOW)  # Turn the scrubber OFF, they should not be on at the same time            
+        elif controller.state_change('LeftTrigger'):
+            self.mod.actuator_stop()
+        if controller.get_button('RightTrigger') > 0.1 and controller.state_change('RightTrigger'): # motor speed control
+            if self.speed < 100:
+                self.speed = self.speed + 5
+                if self.driving != 'S':
+                    L,R,stop = controller.get_duty_cycle(self.speed,self.driving)
+                    self.update_motors(L,R,stop)
+            print(f"drive speed: {self.speed}")
+        if controller.get_button('LeftShoulder') and controller.state_change('LeftShoulder'): # tape module actuator control
+            self.mod.actuator_backward()
+            GPIO.output(self.scrubber_pin, GPIO.LOW)  # Turn the scrubber OFF, they should not be on at the same time 
+        elif controller.state_change('LeftShoulder'):
+            self.mod.actuator_stop()
+        if controller.get_button('RightShoulder') and controller.state_change('RightShoulder'): # motor speed control
+            if self.speed > 0:
+                self.speed = self.speed - 5
+                if self.driving != 'S':
+                    L,R,stop = controller.get_duty_cycle(self.speed,self.driving)
+                    self.update_motors(L,R,stop)
+            print(f"drive speed: {self.speed}")
 
 
     def cleanup(self):
