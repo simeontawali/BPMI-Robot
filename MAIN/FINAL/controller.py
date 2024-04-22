@@ -54,6 +54,25 @@ class Controller:
                 'Back': False  # Back Button
             }
         }
+        self.data = {
+            'Lights': {
+                'FW': False,  # Front white
+                'FUV': False,  # Front UV
+                'BW': False,  # Bottom White
+                },
+            'Temp': {
+                'CPUTemp': 0.0,
+                'GPUTemp': 0.0,
+                },
+            'DriveSpeed': {
+                'LeftThumb': (0.0, 0.0), 
+                'RightThumb': (0.0, 0.0)
+                },
+            'Connections': {
+                'Controller': False,  # Controller task
+                'Camera': False,  # Camera task
+                }
+            }
         self.prev_state = copy.deepcopy(self.state)
         self.prev_controller_values = None
         self.deadzone_value = True

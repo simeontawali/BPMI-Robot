@@ -86,7 +86,7 @@ class NetworkCommunication:
     def send_data(self, data):
         """Sends data over the send socket."""
         if self.send_socket:
-            self.send_socket.sendall(json.dumps(data).encode('utf-8'))
+            self.send_socket.sendall(json.dumps(data).encode('utf-8') + '\n')
 
     def close_connection(self):
         """Closes both sending and receiving sockets."""
