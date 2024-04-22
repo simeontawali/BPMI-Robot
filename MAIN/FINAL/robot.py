@@ -43,6 +43,7 @@ class RobotControl:
         self.setup_gpio()
 
     def setup_gpio(self):
+        print('Initializing GPIO and PWMs')
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.led_wf_pin, GPIO.OUT)
         GPIO.setup(self.led_wu_pin,GPIO.OUT)
@@ -63,9 +64,7 @@ class RobotControl:
         os.system(f'echo 1 > {self.pwm_left_pin_path}/enable')
         os.system(f'echo 1 > {self.pwm_right_pin_path}/enable')
 
-        
-        
-
+        print('Finished initializing GPIO and PWM')
 
     def update_motors(self, duty_cycle_l, duty_cycle_r, stop):
         duty_cycle_period_l = duty_cycle_l/100*self.period
@@ -192,7 +191,7 @@ class RobotControl:
             self.mod.actuator_forward()
             GPIO.output(self.scrubber_pin, GPIO.LOW)  # Turn the scrubber OFF, they should not be on at the same time            
         elif controller.state_change('LeftTrigger'):
-            self.mod.actuator_stop()
+            self.mod.actuator_off()
         if controller.get_button('RightTrigger') > 0.1 and controller.state_change('RightTrigger'): # motor speed control
             if self.speed < 100:
                 self.speed = self.speed + 5
@@ -204,7 +203,7 @@ class RobotControl:
             self.mod.actuator_backward()
             GPIO.output(self.scrubber_pin, GPIO.LOW)  # Turn the scrubber OFF, they should not be on at the same time 
         elif controller.state_change('LeftShoulder'):
-            self.mod.actuator_stop()
+            self.mod.actuator_off()
         if controller.get_button('RightShoulder') and controller.state_change('RightShoulder'): # motor speed control
             if self.speed > 0:
                 self.speed = self.speed - 5

@@ -195,7 +195,6 @@ class Controller:
         
         # translate to differential drive
         (left_speed,right_speed) = self.joystick_to_diff(Y,X,min_speed,max_speed,min_speed,max_speed) # X,Y,min_joystick,max_joystick,min_speed,max_speed)
-        print(f"joystick_to_diff: {left_speed},{right_speed}")
         left_duty_cycle = self.map_val(left_speed, min_speed, max_speed, 4.5+offsetL,10.5+offsetL)  # range, adjust as needed
         right_duty_cycle = self.map_val(right_speed, min_speed, max_speed, 4.5+offsetR, 10.5+offsetR)  # range, adjust as needed
 
