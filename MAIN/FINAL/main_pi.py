@@ -30,7 +30,7 @@ import threading
 # server_command = ['python','/mnt/usb_share/32-bit_cam_stream.py']
 server_command = ['python','/mnt/usb_share/cam.py']
 # command to run the ethernet controller script
-ethernet_command = ['python','/mnt/usb_share/temp_main.py']
+ethernet_command = ['python','/mnt/usb_share/conn_manager.py']
 
 def run_ethernet_script():
     while True:
