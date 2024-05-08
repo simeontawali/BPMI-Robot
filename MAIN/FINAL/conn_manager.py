@@ -20,7 +20,7 @@ def main():
                 for controller_val in controller_values:
                     controller.update_state(controller_val)
                     indicators = robot.update_control(controller)
-                    #network.send_data(indicators)
+                    #network.send_data(indicators) # not debugged
             except json.JSONDecodeError as e:
                 print(e)
                 print('Detected JSON decode error')
