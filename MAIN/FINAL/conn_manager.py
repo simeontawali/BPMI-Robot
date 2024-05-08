@@ -19,7 +19,8 @@ def main():
                     pass
                 for controller_val in controller_values:
                     controller.update_state(controller_val)
-                    robot.update_control(controller)
+                    indicators = robot.update_control(controller)
+                    #network.send_data(indicators)
             except json.JSONDecodeError as e:
                 print(e)
                 print('Detected JSON decode error')
