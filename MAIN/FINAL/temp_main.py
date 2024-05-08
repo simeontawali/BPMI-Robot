@@ -16,7 +16,6 @@ def main():
             try:
                 controller_values = network.receive_control_data(conn)
                 if controller_values is None:
-                # controller.update_state(controller_values)
                     pass
                 for controller_val in controller_values:
                     controller.update_state(controller_val)
