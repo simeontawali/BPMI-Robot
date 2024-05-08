@@ -43,23 +43,6 @@ class NetworkCommunication:
         print(f"Connection from {self.client_address}")
         return connection
 
-    def receive_data(self, connection):
-        """Receives data from the accepted connection."""
-        data = connection.recv(4096)
-        if data:
-            try:
-                rx = json.loads(data.decode('utf-8'))
-                #print(data) # print good data to compare with bad
-                return rx
-            except json.JSONDecodeError as e:
-                print("ERROR ERROR ERROR ERROR")
-                print(data)
-                print("ERROR ERROR ERROR ERRROR")
-                return None
-            #return json.loads(data.decode('utf-8'))
-        return None
-    
-    # NOTE: This function throws errors whenever called
     def receive_control_data(self,conn):
         buffer = ""
         try:
