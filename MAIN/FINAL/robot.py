@@ -238,6 +238,7 @@ class RobotControl:
                     self.update_motors(L,R,stop)
             print(f"drive speed: {self.speed}")
             self.data['DriveSpeed']['Value'] = self.speed
+        return self.data
 
     def cleanup(self):
         GPIO.cleanup()
