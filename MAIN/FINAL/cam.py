@@ -1,7 +1,9 @@
 #!/usr/bin/python3
 
 """
-BPMI Picamera2 MJPEG Streaming
+BPMI Robotic Annular Pipe Sanitization System
+File Name: cam.py
+Authors: Tiwari, Gomez, Bennett
 
 This script sets up a streaming server using Picamera2 library to stream MJPEG frames.
 Clients can view the stream by pointing a web browser to http://<this-ip-address>:8000.
