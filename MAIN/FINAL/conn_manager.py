@@ -1,5 +1,12 @@
 """
-BPMI Control Data Management Scripts
+BPMI Robotic Annular Pipe Sanitization System
+File Name: conn_manager.py
+Authors: Tiwari, Gomez, Bennett
+
+This script initiates the two threads required for robot operation, the camera streaming thread (cam.py)
+and the controller data streaming thread (conn_manager.py).
+
+"""
 
 This script initializes the socket connection to the user application through the network class,
 interprets the controller data through the controller class, and updates the robot hardware through
