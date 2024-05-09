@@ -1,21 +1,10 @@
 """
 BPMI Robotic Annular Pipe Sanitization System
 File Name: main.py
-Date Created: 10/11/2023 SAT
-Date Last Modified: 10/28/2023 SAT
-Description: main script
-Verion: 0.1.1
 Authors: Tiwari, Gomez, Bennett
 
-Build Notes:
-    Initial structure and research
-
-Dependencies: None
-
-References:
-
-Additional Notes:
-    Ensure ports are the same on both the pi and the pc
+This script initiates the two threads required for robot operation, the camera streaming thread (cam.py)
+and the controller data streaming thread (conn_manager.py).
 
 """
 
@@ -26,8 +15,6 @@ import sys
 import threading
 
 # command to run the camera streaming server script
-# server_command = ['python','/mnt/usb_share/cam_stream.py']
-# server_command = ['python','/mnt/usb_share/32-bit_cam_stream.py']
 server_command = ['python','/mnt/usb_share/cam.py']
 # command to run the ethernet controller script
 ethernet_command = ['python','/mnt/usb_share/conn_manager.py']
