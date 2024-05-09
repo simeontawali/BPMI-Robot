@@ -1,21 +1,17 @@
 """
 BPMI Robotic Annular Pipe Sanitization System
 File Name: controller.py
-Date Created: 3/5/2024 TSA
-Date Last Modified: 3/5/2024 TSA
-Description: Controller class
-Verion: 1.0.1
-Authors: TSA
 
-Build Notes: First Finished Implementation
+Authors: Tiwari, Gomez, Bennett
 
-Dependencies: None
+This script receives controller data from conn_manager and updates its current and previous controller state values.
+It has functions to check when a specific controller state value has changed and functions to retrieve specific
+controller values.
 
 References:
 JoystickToDiff
 https://www.instructables.com/Joystick-to-Differential-Drive-Python/
 
-Additional Notes:
 
 """
 import math
@@ -73,12 +69,13 @@ class Controller:
                 'Camera': False,  # Camera task
                 }
             }
-        self.prev_state = copy.deepcopy(self.state)
-        self.prev_controller_values = None
-        self.deadzone_value = True
+        self.prev_state = copy.deepcopy(self.state) # copy of previous state to allow checking for controller state changes
+        self.prev_controller_values = None 
+        self.deadzone_value = True # set whether the joystick's deadzones are enabled
         self.thumbstick_deadzone = 0.15
-        self.motor_deadzone = 0.04
+        self.motor_deadzone = 0.04 # set whether the motor deadzone is enabled
 
+    # parse input and update current controller state fields
     def update(self, state, new_values):
         try:
             # Update Thumbsticks
@@ -118,7 +115,8 @@ class Controller:
             print(f"  {category}:")
             for key, value in details.items():
                 print(f"    {key}: {value}")
-
+                
+    # update controller values and save previous state
     def update_state(self, new_values):
         self.prev_state = copy.deepcopy(self.state)
         #self.update_prev_state(self.state)
@@ -172,6 +170,8 @@ class Controller:
 
         # If input_name does not match any known inputs or patterns
         return "Unknown input"
+
+    # no longer used, caps input value at deadzone threshold
     @staticmethod
     def deadzone(value, threshold):
         if abs(value) < threshold:
@@ -180,11 +180,14 @@ class Controller:
             return (value - threshold) / (1 - threshold)
         else:
             return (value + threshold) / (1 - threshold)
-        
+
+    # joystick deadzone    
     def set_deadzone(self,deadzone_value: bool):
         print(f"Deadzone is {'active' if deadzone_value else 'not active'}\n")
         self.deadzone_value = deadzone_value
 
+    # return duty cycles of servo motor PWM pins given a speed and direction, and return whether the motors are meant
+    # to be stopped
     def get_duty_cycle(self, speed, dir):
         # offsets based on measured PWM values
         offsetL = 0
