@@ -1,19 +1,10 @@
 """
 BPMI Robotic Annular Pipe Sanitization System
 File Name: Robot.py
-Date Created: 3/5/2024 TSA
-Date Last Modified: 3/5/2024 TSA
-Description: Robot class
-Version: 1.0.1
-Authors: TSA
+Authors: Tiwari, Gomez, Bennett
 
-Build Notes: First Finished Implementation
-
-Dependencies: None
-
-References:
-
-Additional Notes:
+This script manages all of the robot hardware control. When update is called, it checks for controller state
+changes and translates those to the corresponding hardware outputs.
 
 """
 import RPi.GPIO as GPIO
@@ -28,7 +19,8 @@ class RobotControl:
         self.led_wu_pin = 21
         self.led_uv_pin = 18
 
-        self.motor_stop_pin = 15
+        self.motor_stop_pin = 15 # controls the relay for toggling power to the servo motors
+        # paths to config files for hardware PWMs and control variables:
         self.pwm_left_pin_path = '/sys/class/pwm/pwmchip0/pwm0'
         self.pwm_right_pin_path = '/sys/class/pwm/pwmchip0/pwm1'
         self.pwm_export_path = '/sys/class/pwm/pwmchip0/export'
@@ -76,6 +68,7 @@ class RobotControl:
         duty_cycle_period = duty_cycle/100*self.period
         GPIO.output(self.motor_stop_pin, GPIO.LOW) # start relay in stopped position
 
+        # setup hardware PWMs, which are controlled via shell commands
         os.system(f'echo 1 > {self.pwm_export_path}')
         os.system(f'echo 0 > {self.pwm_export_path}')
         os.system(f'echo {round(self.period)} > {self.pwm_left_pin_path}/period')
@@ -87,6 +80,7 @@ class RobotControl:
 
         print('Finished initializing GPIO and PWM')
 
+    # adjust hardware PWMs based on desired duty cycles 
     def update_motors(self, duty_cycle_l, duty_cycle_r, stop):
         duty_cycle_period_l = duty_cycle_l/100*self.period
         duty_cycle_period_r = duty_cycle_r/100*self.period
@@ -105,6 +99,7 @@ class RobotControl:
         else:
             GPIO.output(self.motor_stop_pin, GPIO.LOW) 
 
+    # check if motors are stopped
     def motors_stopped(self):
         return GPIO.input(self.motor_stop_pin) == GPIO.LOW
 
