@@ -1,19 +1,10 @@
 """
 BPMI Robotic Annular Pipe Sanitization System
 File Name: Network.py
-Date Created: 3/5/2024 TSA
-Date Last Modified: 3/5/2024 TSA
-Description: Network class
-Verion: 1.0.1
-Authors: TSA
+Authors: Tiwari, Gomez, Bennett
 
-Build Notes: First Finished Implementation
-
-Dependencies: None
-
-References:
-
-Additional Notes:
+This script sets up the socket connection with the user application for sending/receiving controller data
+and robot status information.
 
 """
 import socket
